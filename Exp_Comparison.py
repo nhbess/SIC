@@ -69,7 +69,7 @@ if __name__ == '__main__':
                 "S": 180, 
                 "Z": 180}
     
-    RUNS = 200
+    RUNS = 100
 
     results = {}
     def get_convergence_step(arr):
