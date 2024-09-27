@@ -41,7 +41,7 @@ def plot_logistic():
     params = [[0.5, np.pi,    10, 0.8],
             [0.9, np.pi*0.8,      50, 0.5],
             [0.33,   np.pi/2,    1000, 0.89],
-            TunableParameters.params_logistic,
+            TunableParameters.LOGISTIC_PARAMS,
             ]
         
     palette = _colors.create_palette(len(params))
@@ -79,7 +79,7 @@ def plot_bidirect():
 
     params = [[0.01, 0.2,      0.1, 1],
               [0.01, 0.1,      0.05, 0.5],
-              [TunableParameters.LAMBDA_SKEWED, TunableParameters.A, TunableParameters.B, TunableParameters.C],
+              TunableParameters.GAUSSIAN_PARAMS,
             ]
     
     
@@ -111,6 +111,41 @@ def plot_bidirect():
     plt.savefig(f'{_folders.MEDIA_PATH}/Skewed.png', dpi=300, bbox_inches='tight')
     #plt.show()
     plt.close()
+
+def plot_fourier():
+    fig = plt.figure(figsize=FIG_SIZE)
+
+   
     
+    S = np.linspace(0, 2*np.pi, 1000)
+    
+    def compute_alpha(omega, s):
+                a0 = TunableParameters.FOURIER_PARAMS[1]
+                a_n = TunableParameters.FOURIER_PARAMS[2:2 + TunableParameters.TERMS]
+                b_n = TunableParameters.FOURIER_PARAMS[2 + TunableParameters.TERMS:]
+
+                alpha = a0  # Start with the zeroth term
+                # Change the loop to use range(1, TunableParameters.TERMS + 1) instead of len(Fourier_PARAMS) + 1
+                for n in range(1, TunableParameters.TERMS + 1):
+                    alpha += a_n[n - 1] * np.cos(n * omega) + b_n[n - 1] * np.sin(n * omega)
+                alpha *= s  # Scale by s
+                return alpha
+    
+      
+    ANGLE = compute_alpha(S, 1)
+    #$\lambda$={format_number(param[0])} 
+    #label = f'$A$={format_number(param[1])} $B$={format_number(param[2])} $C$={format_number(param[3])}'
+    plt.plot(S, ANGLE)
+
+    plt.ylabel('$\\alpha$ [rad]')
+    plt.xlabel('$s$')
+    plt.legend(fontsize=9, framealpha=0.7)#, loc='upper right')
+    #title
+    plt.title('Fourier')
+    plt.savefig(f'{_folders.MEDIA_PATH}/Fourier.png', dpi=300, bbox_inches='tight')
+    #plt.show()
+    plt.close()
+
 plot_logistic()
 plot_bidirect()
+plot_fourier()

@@ -171,12 +171,12 @@ class Behaviors:
             
             # Symetry breaking
             I = 1 if tile.is_contact else -1
-            tile.S =  tile.S + TunableParameters.LAMBDA_SKEWED * I
+            tile.S =  tile.S + TunableParameters.GAUSSIAN_PARAMS[0] * I
             tile.S = np.clip(tile.S, 0, 1)
             
-            A = TunableParameters.A
-            B = TunableParameters.B
-            C = TunableParameters.C
+            A = TunableParameters.GAUSSIAN_PARAMS[1]
+            B = TunableParameters.GAUSSIAN_PARAMS[2]
+            C = TunableParameters.GAUSSIAN_PARAMS[3]
             x = tile.S
             
             alteration_angle = np.exp(-np.power((x-C),2)/(np.power(A,2))) * (x-C)/(np.power(A,2))*B

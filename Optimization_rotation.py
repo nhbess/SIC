@@ -17,6 +17,8 @@ def simulate_individual():
         setup_0['symbol'] = random.choice(["I", "O", "T", "J", "L", "S", "Z"])
         setup_0['resolution'] = 2
         simulator = Simulator(setup_0)
+        simulator.tetromino.rect.center = (simulator.board.X*simulator.board.TILE_SIZE//2, simulator.board.Y*simulator.board.TILE_SIZE//2)            
+        simulator.tetromino.rotate(random.randint(0, 360), allow_max_rotation=False)
         results = simulator.run_simulation()
         return results
 
@@ -33,7 +35,6 @@ def reward_function_individual():
 
 
 if __name__ == "__main__":
-    sys.exit()
     import _folders
     _folders.set_experiment_folders('_Optimization')
     
@@ -61,7 +62,7 @@ if __name__ == "__main__":
 
         'dead_tiles': 0,
         'save_animation': False,
-        'max_iterations': 600,
+        'max_iterations': 1000,
     }
     
     BEHAVIORS = [Behaviors.Discrete, 
@@ -78,9 +79,9 @@ if __name__ == "__main__":
     
 
 
-    BEHAVIORS = [Behaviors.Gaussian]
-    PARAMETERS = [TunableParameters.GAUSSIAN_PARAMS]
-    NAMES = ['Gaussian']
+    #BEHAVIORS = [Behaviors.Gaussian]
+    #PARAMETERS = [TunableParameters.GAUSSIAN_PARAMS]
+    #NAMES = ['Gaussian']
     
 
 

@@ -16,7 +16,7 @@ if __name__ == "__main__":
     #random.seed(87716)
     print(f'Random seed: {seed}')
 
-    Tile.execute_behavior = Behaviors.Discrete
+    Tile.execute_behavior = Behaviors.Fourier
 
 
     setup_0 = {
@@ -42,13 +42,13 @@ if __name__ == "__main__":
         'file_name': False,
 
         'dead_tiles': 0,
-        'save_animation': seed,
+        'save_animation': False,
         'max_iterations': 500,
     }
     
     
     symbol = random.choice(["I", "O", "T", "J", "L", "S", "Z"])
-    symbol = 'S'
+    symbol = 'T'
     setup_0['symbol'] = symbol
     setup_0['resolution'] = 2
     simulator = Simulator(setup_0)

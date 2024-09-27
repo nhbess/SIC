@@ -2,14 +2,47 @@ import numpy as np
 
 class TunableParameters:
     #Discrete
-    DISCRETE_PARAMS = np.random.rand(2) # Lambda + tau
+    DISCRETE_PARAMS = np.array([
+            0.25986795198789314,
+            0.24035648991443015]) # Lambda + tau
 
     # Logistic
-    LOGISTIC_PARAMS = np.random.rand(4) # Lambda + Span + Slope + Shift
+    LOGISTIC_PARAMS = np.array([
+            0.20263030640326146,
+            -1.103676768608463,
+            0.7287638197161781,
+            -0.5965212364057796
+        ]) # Lambda + Span + Slope + Shift
 
     # Gaussian
-    GAUSSIAN_PARAMS = np.random.rand(4) # Lambda + A + B + C
+    GAUSSIAN_PARAMS = np.array([
+            0.6623382363669879,
+            -0.07998960157815578,
+            0.3474828567221157,
+            -0.21802680144652464
+        ]) # Lambda + A + B + C
 
     # Fourier
     TERMS = 9
-    FOURIER_PARAMS = np.random.rand(2 + 2 * TERMS) # Lambda + a0 + (ai, bi) for i in TERMS
+    FOURIER_PARAMS = np.array([
+            0.8723728151355066,
+            -0.10673998145288272,
+            0.2739129774473509,
+            -0.2593603119709139,
+            -0.6040724835597213,
+            0.06024419743744855,
+            0.6880013844214604,
+            0.16095282875435,
+            0.34565845284398233,
+            -0.83817147706128,
+            0.043344413284068684,
+            -0.236107871565153,
+            -0.39937558013451574,
+            0.15766260296519996,
+            -0.637074785117464,
+            0.03736447589281275,
+            -0.27021089488259015,
+            0.44818497706625904,
+            -0.3811661825569544,
+            0.15585860300789756
+        ]) # Lambda + a0 + (ai, bi) for i in TERMS
