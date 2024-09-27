@@ -22,7 +22,7 @@ def simulate_individual():
 
 def reward_function_individual():
     run_rewards = []
-    for _ in range(5):
+    for _ in range(10):
         try:
             results = simulate_individual()
             coverage = results['coverage'][-1]
@@ -103,8 +103,8 @@ if __name__ == "__main__":
             'BEST': [],
             'REWARDS': []
         }
-        solver = EvolutionarStrategies.CMAES(num_params=len(P), popsize=3, weight_decay=0.01, sigma_init=0.5)
-        for g in range(5):
+        solver = EvolutionarStrategies.CMAES(num_params=len(P), popsize=12, weight_decay=0.01, sigma_init=0.5)
+        for g in range(50):
             solutions = solver.ask()
             fitness_list = np.zeros(solver.popsize)
 
