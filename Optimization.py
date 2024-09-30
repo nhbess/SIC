@@ -13,18 +13,23 @@ from tqdm import tqdm
 import EvolutionarStrategies
 
 # SIMULATION
-def simulate_individual():
-        setup_0['symbol'] = random.choice(["I", "O", "T", "J", "L", "S", "Z"])
-        setup_0['resolution'] = 2
-        simulator = Simulator(setup_0)
+def simulate_individual(symbol, position, angle, setup):
+        setup['symbol'] = symbol
+        simulator = Simulator(setup)
+        simulator.tetromino.rect.center = position
+        simulator.tetromino.angle = angle            
         results = simulator.run_simulation()
         return results
 
-def reward_function_individual():
+def reward_function_individual(SYMBOLS,POSITIONS,ANGLES,setup):
     run_rewards = []
-    for _ in range(8):
+    for i in range(len(SYMBOLS)):
+        symbol = SYMBOLS[i]
+        position = POSITIONS[i]
+        angle = ANGLES[i]
+
         try:
-            results = simulate_individual()
+            results = simulate_individual(symbol, position, angle, setup)
             coverage = results['coverage'][-1]
         except:
             coverage = 0
@@ -33,12 +38,13 @@ def reward_function_individual():
 
 
 if __name__ == "__main__":
-    sys.exit()
+
     import _folders
     _folders.set_experiment_folders('_Optimization')
-    
-    setup_0 = {
-        'N' : 10,
+    random.seed(0)
+    np.random.seed(0)
+    setup = {
+        'N' : 20,
         'TILE_SIZE' : 20,
         'object': True,
         'symbol': 'T',
@@ -75,15 +81,17 @@ if __name__ == "__main__":
                   TunableParameters.FOURIER_PARAMS]
     
     NAMES = ['Discrete', 'Logistic', 'Gaussian', 'Fourier']
+
+
+    N_GENERATIONS = 32
+    POPULATION_SIZE = 16
+    RUNS = 50
+
+    SYMBOLS = [random.choice(["I", "O", "T", "J", "L", "S", "Z"]) for _ in range(RUNS)]
+    POSITIONS = [(random.random()*setup['N']*setup['TILE_SIZE'], random.random()*setup['N']*setup['TILE_SIZE']) for _ in range(RUNS)]
+    ANGLES = [random.random()*360 for _ in range(RUNS)]
     
-
-
-    BEHAVIORS = [Behaviors.Gaussian]
-    PARAMETERS = [TunableParameters.GAUSSIAN_PARAMS]
-    NAMES = ['Gaussian']
-    
-
-
+            
     for B, P, N in zip(BEHAVIORS, PARAMETERS, NAMES):
         Tile.execute_behavior = B
         file_path = f'{_folders.RESULTS_PATH}/Evolution_{N}.json'
@@ -92,9 +100,9 @@ if __name__ == "__main__":
             'BEST': [],
             'REWARDS': []
         }
-        #pop 16, 32 generations, 8 runs
-        solver = EvolutionarStrategies.CMAES(num_params=len(P), popsize=16, weight_decay=0.01, sigma_init=0.5)
-        for g in range(32):
+
+        solver = EvolutionarStrategies.CMAES(num_params=len(P), popsize=POPULATION_SIZE, weight_decay=0.01, sigma_init=0.5)
+        for g in range(N_GENERATIONS):
             solutions = solver.ask()
             fitness_list = np.zeros(solver.popsize)
 
@@ -117,7 +125,7 @@ if __name__ == "__main__":
                 
                 else: raise ValueError('Invalid name')
 
-                fitness_list[i] = reward_function_individual()
+                fitness_list[i] = reward_function_individual(SYMBOLS,POSITIONS,ANGLES,setup)
 
             solver.tell(fitness_list)
             result = solver.result()
@@ -129,3 +137,13 @@ if __name__ == "__main__":
             results['REWARDS'].append(fitness_list.tolist())
             with open(file_path, 'w') as f:
                 json.dump(results, f)
+
+    best_params = {}
+    for N in NAMES:
+        file_path = f'{_folders.RESULTS_PATH}/Evolution_{N}.json'
+        with open(file_path, 'r') as f:
+            results = json.load(f)
+            best_params[N] = results['BEST'][-1]
+
+    with open(f'{_folders.RESULTS_PATH}/best_params.json', 'w') as f:
+        json.dump(best_params, f)

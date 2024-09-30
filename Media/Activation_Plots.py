@@ -146,6 +146,6 @@ def plot_fourier():
     #plt.show()
     plt.close()
 
-plot_logistic()
-plot_bidirect()
+#plot_logistic()
+#plot_bidirect()
 plot_fourier()
