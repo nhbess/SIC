@@ -108,7 +108,7 @@ def plot_bidirect():
     plt.legend(fontsize=9, framealpha=0.7)#, loc='upper right')
     #title
     plt.title('Gaussian')
-    plt.savefig(f'{_folders.MEDIA_PATH}/Skewed.png', dpi=300, bbox_inches='tight')
+    plt.savefig(f'{_folders.MEDIA_PATH}/Gaussian.png', dpi=300, bbox_inches='tight')
     #plt.show()
     plt.close()
 
