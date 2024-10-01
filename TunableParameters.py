@@ -1,94 +1,31 @@
 import numpy as np
+import json
 
 class TunableParameters:
-    #Discrete
-#    DISCRETE_PARAMS = np.array([
-#            0.25986795198789314,
-#            0.24035648991443015]) # Lambda + tau
-#
-#    # Logistic
-#    LOGISTIC_PARAMS = np.array([
-#            0.20263030640326146,
-#            -1.103676768608463,
-#            0.7287638197161781,
-#            -0.5965212364057796
-#        ]) # Lambda + Span + Slope + Shift
-#
-#    # Gaussian
-#    GAUSSIAN_PARAMS = np.array([
-#            0.6623382363669879,
-#            -0.07998960157815578,
-#            0.3474828567221157,
-#            -0.21802680144652464
-#        ]) # Lambda + A + B + C
-#
-#    # Fourier
-#    TERMS = 9
-#    FOURIER_PARAMS = np.array([
-#            0.8723728151355066,
-#            -0.10673998145288272,
-#            0.2739129774473509,
-#            -0.2593603119709139,
-#            -0.6040724835597213,
-#            0.06024419743744855,
-#            0.6880013844214604,
-#            0.16095282875435,
-#            0.34565845284398233,
-#            -0.83817147706128,
-#            0.043344413284068684,
-#            -0.236107871565153,
-#            -0.39937558013451574,
-#            0.15766260296519996,
-#            -0.637074785117464,
-#            0.03736447589281275,
-#            -0.27021089488259015,
-#            0.44818497706625904,
-#            -0.3811661825569544,
-#            0.15585860300789756
-#        ]) # Lambda + a0 + (ai, bi) for i in TERMS
-#
-    DISCRETE_PARAMS = np.array([
-            0.4057358378242851,
-            0.5477917044436684
-        ]) # Lambda + tau
+    DISCRETE_PARAMS = np.zeros(2) # Lambda + tau
+    LOGISTIC_PARAMS = np.zeros(4) # Lambda + Span + Slope + Shift
+    GAUSSIAN_PARAMS = np.zeros(4) # Lambda + A + B + C
+    
+    FOURIER_TERMS = 3
+    FOURIER_PARAMS = np.zeros(1 + 1 + 2*FOURIER_TERMS)  # Lambda + a0 + (ai, bi) for i in TERMS
+    
 
-    # Logistic
-    LOGISTIC_PARAMS = np.array([
-            1.1448043295664276,
-            1.030634569107316,
-            -0.5839118791801243,
-            -1.0663355303759385
-        ]) # Lambda + Span + Slope + Shift
+    @staticmethod
+    def set_params():
+        best_params_path = '_Optimization/__Results/best_params.json'
+        with open(best_params_path, 'r') as file:
+            best_params = json.load(file)
 
-    # Gaussian
-    GAUSSIAN_PARAMS = np.array([
-            1.8469525785302592,
-            0.7849700479069133,
-            -0.7976860733375077,
-            -0.3130230434019965
-        ]) # Lambda + A + B + C
+        TunableParameters.DISCRETE_PARAMS = np.array(best_params['Discrete'])
+        TunableParameters.LOGISTIC_PARAMS = np.array(best_params['Logistic'])
+        TunableParameters.GAUSSIAN_PARAMS = np.array(best_params['Gaussian'])
+        TunableParameters.FOURIER_PARAMS = np.array(best_params['Fourier'])
 
-    # Fourier
-    TERMS = 9
-    FOURIER_PARAMS = np.array([
-            0.6143050973701817,
-            -0.3609820043995616,
-            -1.2664419378157934,
-            -0.3814490326308547,
-            -1.0862185326635334,
-            0.6109893641646189,
-            1.499830527347492,
-            1.1074262538285131,
-            1.325187899752703,
-            -0.12625549559554178,
-            -0.5289099156051233,
-            0.23632816470331702,
-            0.1454921934096881,
-            0.5471237315065182,
-            -0.23570718513162164,
-            0.8019609307547171,
-            0.249313297675894,
-            0.4362057580001091,
-            -1.812707941821142,
-            -0.34088098470057354
-        ]) # Lambda + a0 + (ai, bi) for i in TERMS
+    @staticmethod
+    def print_params():
+        print('Discrete:', TunableParameters.DISCRETE_PARAMS)
+        print('Logistic:', TunableParameters.LOGISTIC_PARAMS)
+        print('Gaussian:', TunableParameters.GAUSSIAN_PARAMS)
+        print('Fourier:', TunableParameters.FOURIER_PARAMS)
+
+TunableParameters.print_params()

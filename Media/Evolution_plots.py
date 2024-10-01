@@ -7,7 +7,7 @@ import numpy as np
 import sys
 
 _folders.set_experiment_folders('_Optimization')
-results_path = f'{_folders.RESULTS_PATH}/Evolution_Gaussian.json'
+results_path = f'{_folders.RESULTS_PATH}/Evolution_Fourier.json'
 
 data = json.load(open(results_path, 'r'))
 print(data.keys())

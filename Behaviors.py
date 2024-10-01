@@ -5,7 +5,7 @@ import numpy as np
 
 class Behaviors:
     @staticmethod
-    def information_diffusion(tile:Tile):
+    def InfDiff(tile:Tile):
         if not tile.is_alive:
             return
 
@@ -203,14 +203,15 @@ class Behaviors:
         #CALCUATE TRANSLATION
 
         if len(tile.target_neighbors)>0: #Membrane
+            
             def compute_alpha(omega, s):
                 a0 = TunableParameters.FOURIER_PARAMS[1]
-                a_n = TunableParameters.FOURIER_PARAMS[2:2 + TunableParameters.TERMS]
-                b_n = TunableParameters.FOURIER_PARAMS[2 + TunableParameters.TERMS:]
+                a_n = TunableParameters.FOURIER_PARAMS[2:2 + TunableParameters.FOURIER_TERMS]
+                b_n = TunableParameters.FOURIER_PARAMS[2 + TunableParameters.FOURIER_TERMS:]
 
                 alpha = a0  # Start with the zeroth term
                 # Change the loop to use range(1, TunableParameters.TERMS + 1) instead of len(Fourier_PARAMS) + 1
-                for n in range(1, TunableParameters.TERMS + 1):
+                for n in range(1, TunableParameters.FOURIER_TERMS + 1):
                     alpha += a_n[n - 1] * np.cos(n * omega) + b_n[n - 1] * np.sin(n * omega)
                 alpha *= s  # Scale by s
                 return alpha
@@ -223,9 +224,14 @@ class Behaviors:
             tile.S = LAMBDA * tile.S + (1 - LAMBDA) * int(tile.is_contact)        
             
             omega = np.arctan2(tile.vector_translation[1], tile.vector_translation[0])
+            
+            
+            
             alteration_angle = compute_alpha(omega, tile.S)
             alteration_angle = np.clip(alteration_angle, -np.pi, np.pi)
 
+            
+            
             polar_coords = np.array([TILE_SIZE, omega + alteration_angle])
             tile.vector_translation = np.array([np.cos(polar_coords[1]), np.sin(polar_coords[1])])
 

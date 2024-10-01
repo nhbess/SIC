@@ -7,7 +7,7 @@ import _config
 from tqdm import tqdm
 import sys
 import numpy as np
-
+from TunableParameters import TunableParameters
 if __name__ == '__main__':
     import _folders
     experiment_name = '_Comparison_Extended'
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         'max_iterations': 1000,
     }
 
-    BEHAVIORS = [   Behaviors.information_diffusion, 
+    BEHAVIORS = [   Behaviors.InfDiff, 
                     Behaviors.Discrete,
                     Behaviors.Logistic,
                     Behaviors.Gaussian,
@@ -69,7 +69,7 @@ if __name__ == '__main__':
                 "S": 180, 
                 "Z": 180}
     
-    RUNS = 100
+    RUNS = 500
 
     results = {}
     def get_convergence_step(arr):
@@ -78,6 +78,10 @@ if __name__ == '__main__':
         for index, value in enumerate(reversed(arr)):
             if value != last_value: return len(arr) - index
         return len(arr)
+
+    print("Starting experiment")
+    TunableParameters.set_params()
+    TunableParameters.print_params()
 
     for behavior, behaviors_name in tqdm(zip(BEHAVIORS, BEHAVIORS_NAMES)):
         Tile.execute_behavior = behavior

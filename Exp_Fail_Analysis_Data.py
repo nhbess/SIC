@@ -46,7 +46,7 @@ if __name__ == '__main__':
         'max_iterations': 1000,
     }
 
-    BEHAVIORS = [   Behaviors.information_diffusion, 
+    BEHAVIORS = [   Behaviors.InfDiff, 
                     Behaviors.Discrete,
                     Behaviors.Logistic,
                     Behaviors.Gaussian,

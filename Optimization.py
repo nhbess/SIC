@@ -38,7 +38,7 @@ def reward_function_individual(SYMBOLS,POSITIONS,ANGLES,setup):
 
 
 if __name__ == "__main__":
-
+    sys.exit(f'Do not overwrite the data!')
     import _folders
     _folders.set_experiment_folders('_Optimization')
     random.seed(0)
@@ -83,9 +83,18 @@ if __name__ == "__main__":
     NAMES = ['Discrete', 'Logistic', 'Gaussian', 'Fourier']
 
 
-    N_GENERATIONS = 32
-    POPULATION_SIZE = 16
-    RUNS = 50
+
+
+
+    BEHAVIORS = [Behaviors.Fourier]
+    PARAMETERS = [TunableParameters.FOURIER_PARAMS]
+    NAMES = ['Fourier']
+
+
+
+    N_GENERATIONS = 20
+    POPULATION_SIZE = 10
+    RUNS = 25
 
     SYMBOLS = [random.choice(["I", "O", "T", "J", "L", "S", "Z"]) for _ in range(RUNS)]
     POSITIONS = [(random.random()*setup['N']*setup['TILE_SIZE'], random.random()*setup['N']*setup['TILE_SIZE']) for _ in range(RUNS)]

@@ -121,18 +121,19 @@ def plot_fourier():
     
     def compute_alpha(omega, s):
                 a0 = TunableParameters.FOURIER_PARAMS[1]
-                a_n = TunableParameters.FOURIER_PARAMS[2:2 + TunableParameters.TERMS]
-                b_n = TunableParameters.FOURIER_PARAMS[2 + TunableParameters.TERMS:]
+                a_n = TunableParameters.FOURIER_PARAMS[2:2 + TunableParameters.FOURIER_TERMS]
+                b_n = TunableParameters.FOURIER_PARAMS[2 + TunableParameters.FOURIER_TERMS:]
 
                 alpha = a0  # Start with the zeroth term
                 # Change the loop to use range(1, TunableParameters.TERMS + 1) instead of len(Fourier_PARAMS) + 1
-                for n in range(1, TunableParameters.TERMS + 1):
+                for n in range(1, TunableParameters.FOURIER_TERMS + 1):
                     alpha += a_n[n - 1] * np.cos(n * omega) + b_n[n - 1] * np.sin(n * omega)
                 alpha *= s  # Scale by s
                 return alpha
     
       
     ANGLE = compute_alpha(S, 1)
+    ANGLE = np.clip(ANGLE, -np.pi, np.pi)
     #$\lambda$={format_number(param[0])} 
     #label = f'$A$={format_number(param[1])} $B$={format_number(param[2])} $C$={format_number(param[3])}'
     plt.plot(S, ANGLE)
@@ -146,6 +147,10 @@ def plot_fourier():
     #plt.show()
     plt.close()
 
-#plot_logistic()
-#plot_bidirect()
+
+from TunableParameters import TunableParameters
+TunableParameters.set_params()
+
+plot_logistic()
+plot_bidirect()
 plot_fourier()

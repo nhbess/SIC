@@ -47,8 +47,8 @@ class Simulator:
             #self.tetromino.rect.center = (0, 0)
             self.tetromino.rect.center = (random.randint(0, self.setup['N']*self.board.TILE_SIZE),random.randint(0, self.setup['N']*self.board.TILE_SIZE))
             
-            #TETRO_ANGLE = 180
-            #self.tetromino.rotate(random.randint(TETRO_ANGLE, TETRO_ANGLE), allow_max_rotation=False)
+            TETRO_ANGLE = 180
+            self.tetromino.rotate(random.randint(-TETRO_ANGLE, TETRO_ANGLE), allow_max_rotation=False)
             
         for _ in range(self.setup['n_random_targets']):
             self.board.get_tile(random.randint(0, self.board.X-1), random.randint(0, self.board.Y-1)).set_as_target()
