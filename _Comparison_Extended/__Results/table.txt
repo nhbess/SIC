@@ -1,0 +1,15 @@
+\begin{table}
+\centering
+\caption{Performance metric results.}
+\label{tab1}
+\begin{tabular}{|l|l|l|l|}
+\hline
+Metric & Behavior & $\mu$ & $\sigma$ \\ \hline
+Position Error [tiles] & \begin{tabular}[c]{@{}l@{}}InfDiff\\\textit{Discrete}\\\textbf{Logistic}\\Gaussian\\Fourier\end{tabular} & \begin{tabular}[c]{@{}l@{}}0.27\\\textit{0.25}\\\textbf{0.19}\\0.31\\0.27\end{tabular} & \begin{tabular}[c]{@{}l@{}}0.18\\\textit{0.26}\\\textbf{0.17}\\0.32\\0.33\end{tabular} \\\hline
+Angle Error
+Symmetry Free [$^\circ$] & \begin{tabular}[c]{@{}l@{}}\textbf{InfDiff}\\Discrete\\\textit{Logistic}\\Gaussian\\Fourier\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{5.15}\\19.62\\\textit{9.29}\\31.38\\9.87\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{5.20}\\39.10\\\textit{16.02}\\52.66\\16.52\end{tabular} \\\hline
+Coverage $[\%]$ & \begin{tabular}[c]{@{}l@{}}\textbf{InfDiff}\\Discrete\\\textit{Logistic}\\Gaussian\\Fourier\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{0.93}\\0.89\\\textit{0.91}\\0.87\\0.89\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{0.07}\\0.11\\\textit{0.09}\\0.13\\0.14\end{tabular} \\\hline
+Operation Period
+[update steps] & \begin{tabular}[c]{@{}l@{}}\textbf{InfDiff}\\Discrete\\Logistic\\\textit{Gaussian}\\Fourier\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{83.26}\\138.85\\141.01\\\textit{118.94}\\220.76\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{30.29}\\94.01\\76.10\\\textit{58.47}\\204.73\end{tabular} \\\hline
+\multicolumn{3}{l}{\footnotesize{$^{*}$Best results in \textbf{bold}, second-best results in \textit{italics}.}} \\\end{tabular}
+\end{table}

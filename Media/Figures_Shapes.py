@@ -1,7 +1,10 @@
 from matplotlib import pyplot as plt
 import numpy as np
 import numpy as np
+import os
+import sys
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 #SHAPES ----------------
 tetros_dict = {
 'L' : np.array([(0, 0), (0, 3), (1, 3), (1, 1), (2, 1), (2, 0)]),
@@ -69,8 +72,6 @@ def get_name(vertex:list[list]):
             return name
     raise Exception('Shape not found')
 
-if __name__ == '__main__':
-    pass
 
 if __name__ == '__main__':
     from _colors import create_palette
@@ -124,7 +125,7 @@ if __name__ == '__main__':
         plt.gca().set_aspect('equal', adjustable='box')
         
         plt.tight_layout()
-        path_image = f'Images/Paper/shapes_group_{n}.png'
+        path_image = f'Media/shapes_group_{n}.png'
         plt.savefig(path_image, dpi=600, bbox_inches='tight', pad_inches=0, transparent=False)
         plt.show()
         plt.clf()

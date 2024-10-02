@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#PALETTE = ["EF476F","FFD166","06D6A0","118AB2","073B4C"]
-PALETTE = ["FF6700","EBEBEB","C0C0C0","3A6EA5","004E98"]
+PALETTE = ["EF476F","FFD166","06D6A0","118AB2","073B4C"]
+#PALETTE = ["FF6700","EBEBEB","C0C0C0","3A6EA5","004E98"]
 
 FIG_SIZE = (6*0.75, 2*0.5)
 

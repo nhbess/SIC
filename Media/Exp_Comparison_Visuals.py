@@ -102,8 +102,8 @@ def resultant_error_histogram(results):
     
     print(results.keys())
 
-    METRICS = ['ER_POS', 'ER_ANG', 'ER_ANGS', 'COVERAGE', 'OPT']
-    YLABELS = ['Position Error [tiles]', 'Angle Error [$^\circ$]', 'Angle Error\nSymmetry Free [$^\circ$]', 'Coverage [%]', 'Operation Period\n[update steps]']
+    METRICS = ['ER_POS', 'ER_ANG', 'COVERAGE', 'OPT']
+    YLABELS = ['Position Error [tiles]', 'Angle Error\nSymmetry Free [$^\circ$]', 'Coverage [%]', 'Operation Period\n[update steps]']
     FILENAMES = [m + '_HIST' for m in METRICS]
     N_BINS = [17, 20, 20, 10, 15]
     for metric, ylabel, filename, n_bins in zip(METRICS, YLABELS, FILENAMES, N_BINS):
@@ -117,8 +117,8 @@ def resultant_error_histogram_lines(results):
     
     print(results.keys())
 
-    METRICS = ['ER_POS', 'ER_ANG', 'ER_ANGS', 'COVERAGE', 'OPT']
-    YLABELS = ['Position Error [tiles]', 'Angle Error [$^\circ$]', 'Angle Error\nSymmetry Free [$^\circ$]', 'Coverage [%]', 'Operation Period\n[update steps]']
+    METRICS = ['ER_POS', 'ER_ANG', 'COVERAGE', 'OPT']
+    YLABELS = ['Position Error [tiles]', 'Angle Error\nSymmetry Free [$^\circ$]', 'Coverage [%]', 'Operation Period\n[update steps]']
     FILENAMES = [m + '_LINE' for m in METRICS]
     N_BINS = [17, 20, 20, 10, 15]
     for metric, ylabel, filename, n_bins in zip(METRICS, YLABELS, FILENAMES, N_BINS):
@@ -132,8 +132,8 @@ def resultant_error_box(results):
     
     print(results.keys())
 
-    METRICS = ['ER_POS', 'ER_ANG', 'ER_ANGS', 'COVERAGE', 'OPT']
-    YLABELS = ['Position Error [tiles]', 'Angle Error [$^\circ$]', 'Angle Error\nSymmetry Free [$^\circ$]', 'Coverage [%]', 'Operation Period\n[update steps]']
+    METRICS = ['ER_POS', 'ER_ANG', 'COVERAGE', 'OPT']
+    YLABELS = ['Position Error [tiles]', 'Angle Error\nSymmetry Free [$^\circ$]', 'Coverage [%]', 'Operation Period\n[update steps]']
     FILENAMES = [m + '_BOX' for m in METRICS]
 
     for metric, ylabel, filename in zip(METRICS, YLABELS, FILENAMES):
@@ -143,9 +143,9 @@ def resultant_error_box(results):
 
 def write_table(results):
 
-    METRICS = ['ER_POS', 'ER_ANGS', 'COVERAGE', 'OPT']
+    METRICS = ['ER_POS', 'ER_ANGS' ,'COVERAGE', 'OPT']
     YLABELS = ['Position Error [tiles]', 'Angle Error\nSymmetry Free [$^\circ$]', 'Coverage [%]', 'Operation Period\n[update steps]']
-    BEHAVIORS = ['Information Diffusion', 'Swarm Inspired', 'Logistic', 'Skewed Gaussian']
+    BEHAVIORS = ['InfDiff', 'Discrete', 'Logistic', 'Gaussian', 'Fourier']
 
 
     table = {}
@@ -236,7 +236,7 @@ if __name__ == '__main__':
     with open(filename, 'r') as file:
         results = json.load(file)
     
-    resultant_error_box(results)
+    #resultant_error_box(results)
     #resultant_error_histogram(results)
     #resultant_error_histogram_lines(results)
-    #write_table(results)
+    write_table(results)

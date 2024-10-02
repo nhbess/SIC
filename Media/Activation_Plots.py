@@ -162,6 +162,6 @@ if __name__ == "__main__":
     from TunableParameters import TunableParameters
     TunableParameters.set_params()
 
-    #plot_logistic()
-    #plot_bidirect()
+    plot_logistic()
+    plot_bidirect()
     plot_fourier()

@@ -7,6 +7,8 @@ import _config
 from tqdm import tqdm
 import sys
 import numpy as np
+from TunableParameters import TunableParameters
+TunableParameters.set_params()
 
 if __name__ == '__main__':
     import _folders
