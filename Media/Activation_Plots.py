@@ -115,24 +115,33 @@ def plot_bidirect():
 def plot_fourier():
     fig = plt.figure(figsize=FIG_SIZE)
     S = np.linspace(0, 2*np.pi, 1000)
-    
-    def compute_alpha(omega, s):
-                a0 = TunableParameters.FOURIER_PARAMS[1]
-                a_n = TunableParameters.FOURIER_PARAMS[2:2 + TunableParameters.FOURIER_TERMS]
-                b_n = TunableParameters.FOURIER_PARAMS[2 + TunableParameters.FOURIER_TERMS:]
+    np.random.seed(456)
 
-                alpha = a0  # Start with the zeroth term
-                # Change the loop to use range(1, TunableParameters.TERMS + 1) instead of len(Fourier_PARAMS) + 1
-                for n in range(1, TunableParameters.FOURIER_TERMS + 1):
-                    alpha += a_n[n - 1] * np.cos(n * omega) + b_n[n - 1] * np.sin(n * omega)
-                alpha *= s  # Scale by s
-                return alpha
+    params = [TunableParameters.FOURIER_PARAMS + np.random.uniform(-1, 1, 1 + 1 + 2*TunableParameters.FOURIER_TERMS)*0.5 for _ in range(2)]
+    params.append(TunableParameters.FOURIER_PARAMS)
+    palette = _colors.create_palette(len(params))
     
-    palette = _colors.create_palette(1)
-      
-    ANGLE = compute_alpha(S, 1)
-    ANGLE = np.clip(ANGLE, -np.pi, np.pi)
-    plt.plot(S, ANGLE, color=palette[0], linestyle='-', label='Fourier')
+    for i, param in enumerate(params):
+        def compute_alpha(omega, s):
+                    a0 = param[1]
+                    a_n = param[2:2 + TunableParameters.FOURIER_TERMS]
+                    b_n = param[2 + TunableParameters.FOURIER_TERMS:]
+    
+                    alpha = a0  # Start with the zeroth term
+                    # Change the loop to use range(1, TunableParameters.TERMS + 1) instead of len(Fourier_PARAMS) + 1
+                    for n in range(1, TunableParameters.FOURIER_TERMS + 1):
+                        alpha += a_n[n - 1] * np.cos(n * omega) + b_n[n - 1] * np.sin(n * omega)
+                    alpha *= s  # Scale by s
+                    return alpha
+        
+          
+        ANGLE = compute_alpha(S, 1)
+        ANGLE = np.clip(ANGLE, -np.pi, np.pi)
+        if i == len(params)-1:
+            linestyle='--'
+        else:
+            linestyle='-'
+        plt.plot(S, ANGLE, color=palette[i], linestyle=linestyle)
 
 
     plt.ylabel('$\\alpha$ [rad]')
@@ -140,10 +149,9 @@ def plot_fourier():
 
 
     plt.xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi], [r'$0$', r'$\frac{\pi}{2}$', r'$\pi$', r'$\frac{3\pi}{2}$', r'$2\pi$'])
-    yticks = [-np.pi/2, -np.pi/3]
-    yticks_labels = [r'$\frac{-\pi}{2}$', r'$\frac{-\pi}{3}$']    
-    plt.yticks(yticks, yticks_labels)
-
+    #write the y ticks in radians
+    plt.yticks([-np.pi*0.75, -np.pi/2, -np.pi/8], 
+               [r'$-\frac{3\pi}{4}$', r'$-\frac{\pi}{2}$', r'$-\frac{\pi}{8}$'])
     plt.title('Fourier')
     plt.savefig(f'{_folders.MEDIA_PATH}/Fourier.png', dpi=300, bbox_inches='tight')
     #plt.show()
@@ -154,6 +162,6 @@ if __name__ == "__main__":
     from TunableParameters import TunableParameters
     TunableParameters.set_params()
 
-    plot_logistic()
-    plot_bidirect()
+    #plot_logistic()
+    #plot_bidirect()
     plot_fourier()
