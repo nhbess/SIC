@@ -10,12 +10,13 @@ import random
 from Environment.Simulator import Simulator
 from Environment.Tile import Tile
 from Behaviors import Behaviors
-
+from TunableParameters import TunableParameters
 if __name__ == "__main__":
     seed = random.randint(0, 1000000)    
     #random.seed(87716)
     print(f'Random seed: {seed}')
 
+    TunableParameters.set_params()
     Tile.execute_behavior = Behaviors.Fourier
 
 
