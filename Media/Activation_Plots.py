@@ -114,9 +114,6 @@ def plot_bidirect():
 
 def plot_fourier():
     fig = plt.figure(figsize=FIG_SIZE)
-
-   
-    
     S = np.linspace(0, 2*np.pi, 1000)
     
     def compute_alpha(omega, s):
@@ -131,26 +128,32 @@ def plot_fourier():
                 alpha *= s  # Scale by s
                 return alpha
     
+    palette = _colors.create_palette(1)
       
     ANGLE = compute_alpha(S, 1)
     ANGLE = np.clip(ANGLE, -np.pi, np.pi)
-    #$\lambda$={format_number(param[0])} 
-    #label = f'$A$={format_number(param[1])} $B$={format_number(param[2])} $C$={format_number(param[3])}'
-    plt.plot(S, ANGLE)
+    plt.plot(S, ANGLE, color=palette[0], linestyle='-', label='Fourier')
+
 
     plt.ylabel('$\\alpha$ [rad]')
-    plt.xlabel('$s$')
-    plt.legend(fontsize=9, framealpha=0.7)#, loc='upper right')
-    #title
+    plt.xlabel('$\omega$ [rad]')
+
+
+    plt.xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi], [r'$0$', r'$\frac{\pi}{2}$', r'$\pi$', r'$\frac{3\pi}{2}$', r'$2\pi$'])
+    yticks = [-np.pi/2, -np.pi/3]
+    yticks_labels = [r'$\frac{-\pi}{2}$', r'$\frac{-\pi}{3}$']    
+    plt.yticks(yticks, yticks_labels)
+
     plt.title('Fourier')
     plt.savefig(f'{_folders.MEDIA_PATH}/Fourier.png', dpi=300, bbox_inches='tight')
     #plt.show()
     plt.close()
 
 
-from TunableParameters import TunableParameters
-TunableParameters.set_params()
+if __name__ == "__main__":
+    from TunableParameters import TunableParameters
+    TunableParameters.set_params()
 
-plot_logistic()
-plot_bidirect()
-plot_fourier()
+    plot_logistic()
+    plot_bidirect()
+    plot_fourier()

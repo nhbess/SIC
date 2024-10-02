@@ -99,7 +99,6 @@ if __name__ == '__main__':
             run_data = simulator.run_simulation()
             
             #PERFORMANCE CALCULATION
-
             shape = run_data['SHAPE']
             target_center = np.array(run_data['TARGET_CENTER'])/TILE_SIZE
             target_angle = run_data['TARGET_ANGLE']

@@ -28,4 +28,4 @@ class TunableParameters:
         print('Gaussian:', TunableParameters.GAUSSIAN_PARAMS)
         print('Fourier:', TunableParameters.FOURIER_PARAMS)
 
-TunableParameters.print_params()
+#TunableParameters.print_params()

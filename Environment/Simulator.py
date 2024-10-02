@@ -57,7 +57,7 @@ class Simulator:
             self.target = Tetromino(self.setup['symbol'], self.setup['TILE_SIZE'], resolution=self.setup['resolution'])
             
             #Random target
-            TARGET_ANGLE = 45
+            TARGET_ANGLE = 180
             self.target.set_angle(random.randint(-TARGET_ANGLE, TARGET_ANGLE))
             self.target.rect.center = (self.board.X*self.board.TILE_SIZE//2, self.board.Y*self.board.TILE_SIZE//2)
             
