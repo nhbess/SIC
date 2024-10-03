@@ -550,25 +550,19 @@ def figure_vortex(data_patha = None):
     #----------------- PLOT -----------------
     N, M = board_size, board_size
 
-    n_steps = 4
+    n_steps = 3
     step_indexes = np.linspace(1, len(vectors), n_steps, dtype=int, endpoint=False)
     print(step_indexes)
 
-    step_indexes = [ 1, 15, 30, 45 ]
+    step_indexes = [ 1, 15, 30]
     print(step_indexes)
-
-    
-    polygon_target = polygon_target/(tile_size*resolution)
-    polygon_target_center = np.mean(polygon_target, axis=0)
-    polygon_target = polygon_target + target_center/(tile_size*resolution) - polygon_target_center
-    target = Tetromino(polygon_target, resolution, COLORS.TARGET)
         
 
 
 
     target_tiles = np.reshape(target_tiles, (N, N))
 
-    fig, axes = plt.subplots(1, n_steps, figsize=(n_steps * 4, 4))
+    fig, axes = plt.subplots(1, n_steps, figsize=(n_steps * 3.5, 4))
 
     for step, ax in zip(range(n_steps), axes):
         #GRID
@@ -581,27 +575,7 @@ def figure_vortex(data_patha = None):
                 #ax.plot(i+0.5, j+0.5, 'x', color=COLORS.GRID)
 
     
-        #TARGET AND TETRO
-        polygon_tetro = tetro_polygons[step_indexes[step]]/(tile_size*resolution)
-        polygon_tetro_center = np.mean(polygon_tetro, axis=0)
-        polygon_tetro = polygon_tetro  + tetro_positions[step_indexes[step]]/(tile_size*resolution) - polygon_tetro_center
-        tetrom = Tetromino(polygon_tetro, resolution, COLORS.OBJECT)
-        
-        #tetrom.angle = tetro_angles[step_indexes[step]]
-        #tetrom.center = tetro_positions[step_indexes[step]]/tile_size 
-
-        draw_tetro(target, ax)
-        draw_tetro(tetrom, ax)
-        
-        contact_tiles_from_data(ax, target_tiles, COLORS.TARGET_TILE, linestyle='-')
-        
-        #plot signal_A
-        signal_A = signals_A[step_indexes[step]]
-        signal_A = signal_A.reshape(N, M)
-
-        if 'No_Rotation' in filename:
-            signal_A = signal_A*0
-        ax.imshow(signal_A, cmap=CMAP, alpha=1, zorder=-1, extent=[0, N, 0, M], origin='lower')
+       
         
         #plot signal_B
         #signal_B = signals_B[step_indexes[step]]
@@ -610,7 +584,6 @@ def figure_vortex(data_patha = None):
         
 
         # Plot vectors in a quiver plot for tiles in contact
-        contacts = np.reshape(contact_tiles[step_indexes[step]], (N, N))
         #print(contacts.shape)
         x = np.arange(0, N, 1) + 0.5
         y = np.arange(0, M, 1) + 0.5
@@ -623,8 +596,8 @@ def figure_vortex(data_patha = None):
         
       
         #set limits
-        X0,X = [5, N-6]
-        Y0,Y = [6, M-5]
+        X0,X = [4, N-4]
+        Y0,Y = [4, M-4]
         ax.set_xlim([X0, X])
         ax.set_ylim([Y0, Y])
 
@@ -637,15 +610,11 @@ def figure_vortex(data_patha = None):
         
         ax.axis('off')
         ax.set_aspect('equal', adjustable='box')
-        ax.set_title(f'Step {step_indexes[step]}', size = 25)
+        ax.set_title(f'Step {step_indexes[step]}', size = 20)
 
-    #add colorbar
-    cbar_ax = fig.add_axes([1, 0.055, 0.02, 0.85])
-    cbar = fig.colorbar(cm.ScalarMappable(cmap=CMAP), cax=cbar_ax)
-    cbar.set_label(f'Excitation Signal $s$', size=25)
-    #cbar.set_ticks([0, 0.5, 1])
-    cbar.ax.tick_params(labelsize=25)
-    
+    #add title
+    title = filename.split('_')[0]
+    fig.suptitle(title, size=20, y=1.05)
     plt.tight_layout()
     plt.savefig(f'Media/{filename}.png', dpi=600, bbox_inches='tight')
 
@@ -653,6 +622,7 @@ if __name__ == '__main__':
     #figure_environment()
     
     figure_vortex(data_patha='Media\Data\Logistic_vortex.json')
+    figure_vortex(data_patha='Media\Data\Gaussian_vortex.json')
     sys.exit()
     datafiles = ['Media\Data\Data_Behavior_Rotation.json',
                  'Media\Data\Data_Behavior_No_Rotation.json',

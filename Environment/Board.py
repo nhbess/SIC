@@ -197,7 +197,7 @@ class Board:
         'vectors_translation' : [tile.vector_translation.tolist() for tile in self.tiles],
         'vectors_rotation' : [tile.vector_rotation.tolist() for tile in self.tiles],
         'vectors' : [tile.vector.tolist() for tile in self.tiles],
-        'signals_A' : [tile.S for tile in self.tiles],
+        #'signals_A' : [tile.S for tile in self.tiles],
         #'signals_B' : [tile.signal_center_excitation_B for tile in self.tiles],
         }
         return data
