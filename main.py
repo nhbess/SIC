@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
         'save_data': True,
         'data_tiles': True,
-        'data_objet_target': True,
+        'data_objet_target': False,
         'file_name': 'test',
 
         'dead_tiles': 0,

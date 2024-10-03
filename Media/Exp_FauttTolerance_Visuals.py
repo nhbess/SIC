@@ -17,6 +17,7 @@ def _correct_behavior_name(behavior):
     elif behavior   == 'Discrete':            return 'Discrete'
     elif behavior   == 'Logistic':            return 'Logistic'
     elif behavior   == 'Gaussian':            return 'Gaussian'
+    elif behavior   == 'Fourier':            return 'Fourier'
     else: raise ValueError(f'Behavior {behavior} not recognized')
 
 def resultant_error():
