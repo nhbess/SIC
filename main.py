@@ -17,7 +17,7 @@ if __name__ == "__main__":
     print(f'Random seed: {seed}')
 
     TunableParameters.set_params()
-    Tile.execute_behavior = Behaviors.Fourier
+    Tile.execute_behavior = Behaviors.Logistic
 
 
     setup_0 = {
@@ -37,10 +37,10 @@ if __name__ == "__main__":
         'delay': False,
         'visualize': True,
 
-        'save_data': False,
-        'data_tiles': False,
-        'data_objet_target': False,
-        'file_name': False,
+        'save_data': True,
+        'data_tiles': True,
+        'data_objet_target': True,
+        'file_name': 'test',
 
         'dead_tiles': 0,
         'save_animation': False,

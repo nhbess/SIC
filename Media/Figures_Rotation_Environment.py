@@ -528,10 +528,131 @@ def figure_behavior_multistep(data_patha = None):
 
 
 
+def figure_vortex(data_patha = None):
+    #----------------- DATA -----------------
+    
+    filename = data_patha.split('Media\Data\\')[-1].split('.')[0]
+    with open(data_patha, 'r') as file:
+        data = json.load(file)
+    
+    board_size = data['BOARD_SIZE']
+    tile_size = data['TILE_SIZE']
+    resolution = data['RESOLUTION']
+    
+    target_center = np.array(data['TARGET_CENTER'])
+    target_tiles = np.array(data['TARGET_TILES'])
+    
+    vectors_translation = np.array(data['vectors_translation'])
+    vectors_rotation = np.array(data['vectors_rotation'])
+    vectors = np.array(data['vectors'])
 
+    
+    #----------------- PLOT -----------------
+    N, M = board_size, board_size
+
+    n_steps = 4
+    step_indexes = np.linspace(1, len(vectors), n_steps, dtype=int, endpoint=False)
+    print(step_indexes)
+
+    step_indexes = [ 1, 15, 30, 45 ]
+    print(step_indexes)
+
+    
+    polygon_target = polygon_target/(tile_size*resolution)
+    polygon_target_center = np.mean(polygon_target, axis=0)
+    polygon_target = polygon_target + target_center/(tile_size*resolution) - polygon_target_center
+    target = Tetromino(polygon_target, resolution, COLORS.TARGET)
+        
+
+
+
+    target_tiles = np.reshape(target_tiles, (N, N))
+
+    fig, axes = plt.subplots(1, n_steps, figsize=(n_steps * 4, 4))
+
+    for step, ax in zip(range(n_steps), axes):
+        #GRID
+        for i in range(N):
+            for j in range(M):
+                ax.plot([i, i+1], [j, j], COLORS.GRID)
+                ax.plot([i, i], [j, j+1], COLORS.GRID)
+                ax.plot([i, i+1], [j+1, j+1], COLORS.GRID)
+                ax.plot([i+1, i+1], [j, j+1], COLORS.GRID)
+                #ax.plot(i+0.5, j+0.5, 'x', color=COLORS.GRID)
+
+    
+        #TARGET AND TETRO
+        polygon_tetro = tetro_polygons[step_indexes[step]]/(tile_size*resolution)
+        polygon_tetro_center = np.mean(polygon_tetro, axis=0)
+        polygon_tetro = polygon_tetro  + tetro_positions[step_indexes[step]]/(tile_size*resolution) - polygon_tetro_center
+        tetrom = Tetromino(polygon_tetro, resolution, COLORS.OBJECT)
+        
+        #tetrom.angle = tetro_angles[step_indexes[step]]
+        #tetrom.center = tetro_positions[step_indexes[step]]/tile_size 
+
+        draw_tetro(target, ax)
+        draw_tetro(tetrom, ax)
+        
+        contact_tiles_from_data(ax, target_tiles, COLORS.TARGET_TILE, linestyle='-')
+        
+        #plot signal_A
+        signal_A = signals_A[step_indexes[step]]
+        signal_A = signal_A.reshape(N, M)
+
+        if 'No_Rotation' in filename:
+            signal_A = signal_A*0
+        ax.imshow(signal_A, cmap=CMAP, alpha=1, zorder=-1, extent=[0, N, 0, M], origin='lower')
+        
+        #plot signal_B
+        #signal_B = signals_B[step_indexes[step]]
+        #signal_B = signal_B.reshape(N, M)
+        #ax.imshow(signal_B, cmap=cm.Greys, alpha=0.5, zorder=-1, extent=[0, N, 0, M], origin='lower')
+        
+
+        # Plot vectors in a quiver plot for tiles in contact
+        contacts = np.reshape(contact_tiles[step_indexes[step]], (N, N))
+        #print(contacts.shape)
+        x = np.arange(0, N, 1) + 0.5
+        y = np.arange(0, M, 1) + 0.5
+        
+        X, Y = np.meshgrid(x, y)
+        #print(X.shape, Y.shape)
+        U, V = vectors[step_indexes[step]].T
+
+        ax.quiver(X, Y, U, V, scale=2, scale_units='xy', angles='xy', color='black', zorder=3, width=0.006)
+        
+      
+        #set limits
+        X0,X = [5, N-6]
+        Y0,Y = [6, M-5]
+        ax.set_xlim([X0, X])
+        ax.set_ylim([Y0, Y])
+
+        #add black border
+        ax.plot([X0, X], [Y0, Y0], 'k', linewidth=2)
+        ax.plot([X0, X], [Y, Y], 'k', linewidth=2)
+        ax.plot([X0, X0], [Y0, Y], 'k', linewidth=2)
+        ax.plot([X, X], [Y0, Y], 'k', linewidth=2)
+
+        
+        ax.axis('off')
+        ax.set_aspect('equal', adjustable='box')
+        ax.set_title(f'Step {step_indexes[step]}', size = 25)
+
+    #add colorbar
+    cbar_ax = fig.add_axes([1, 0.055, 0.02, 0.85])
+    cbar = fig.colorbar(cm.ScalarMappable(cmap=CMAP), cax=cbar_ax)
+    cbar.set_label(f'Excitation Signal $s$', size=25)
+    #cbar.set_ticks([0, 0.5, 1])
+    cbar.ax.tick_params(labelsize=25)
+    
+    plt.tight_layout()
+    plt.savefig(f'Media/{filename}.png', dpi=600, bbox_inches='tight')
 
 if __name__ == '__main__':
-    figure_environment()
+    #figure_environment()
+    
+    figure_vortex(data_patha='Media\Data\Logistic_vortex.json')
     sys.exit()
     datafiles = ['Media\Data\Data_Behavior_Rotation.json',
                  'Media\Data\Data_Behavior_No_Rotation.json',
