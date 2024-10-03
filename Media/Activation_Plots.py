@@ -74,7 +74,7 @@ def plot_logistic():
     plt.close()
     #plt.show()
 
-def plot_bidirect():
+def plot_gaussian():
     fig = plt.figure(figsize=FIG_SIZE)
 
     params = [[0.01, 0.2,      0.1, 1],
@@ -158,10 +158,43 @@ def plot_fourier():
     plt.close()
 
 
+def plot_lambdas():
+    NAMES = ['Discrete', 'Logistic', 'Gaussian', 'Fourier']
+    LAMBDAS = [TunableParameters.DISCRETE_PARAMS[0], 
+               TunableParameters.LOGISTIC_PARAMS[0], 
+               TunableParameters.GAUSSIAN_PARAMS[0], 
+               TunableParameters.FOURIER_PARAMS[0]]
+    
+    N_UPDATE_STEPS = 50
+    UPDATE_STEPS = np.arange(N_UPDATE_STEPS)
+    pallete = _colors.create_palette(len(LAMBDAS))
+    plt.figure(figsize=(6, 2))
+    plt.axvline(x=N_UPDATE_STEPS//2, color='black', linestyle='--')
+
+    for i, l in enumerate(LAMBDAS):
+        S = [0]
+        for t in UPDATE_STEPS:
+            I = int(t < N_UPDATE_STEPS//2)
+            s = S[-1]*l + (1-l)*I
+            S.append(s)
+
+        S = S[0:-1]
+        plt.plot(UPDATE_STEPS,S, label=f"{NAMES[i]} $\lambda$ = {np.round(l,2)}", color=pallete[i])
+
+
+    plt.text(N_UPDATE_STEPS*0.25, 0.2, '$I = 1$', fontsize=12)
+    plt.text(N_UPDATE_STEPS*0.75, 0.2, '$I = 0$', fontsize=12)
+    plt.legend()
+    plt.xlabel('Update Step')
+    plt.ylabel('$s$')
+    plt.savefig(f'{_folders.MEDIA_PATH}/Lambdas.png', dpi=300, bbox_inches='tight')
+
+
 if __name__ == "__main__":
     from TunableParameters import TunableParameters
     TunableParameters.set_params()
 
-    plot_logistic()
-    plot_bidirect()
-    plot_fourier()
+    plot_lambdas()
+    #plot_logistic()
+    #plot_gaussian()
+    #plot_fourier()
