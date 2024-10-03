@@ -16,10 +16,10 @@ CMAP = cm.GnBu
 class COLORS:
     import _colors
     palette = _colors.create_palette(10,normalize=True)
-    #_colors.show_palette(palette, save=True, name='Images/Paper/palette.png')
+    #_colors.show_palette(palette, save=True, name='palette.png')
     OBJECT =        palette[-1]
     TARGET =        palette[0]
-    CONTACT_TILE =  palette[7]
+    CONTACT_TILE =  palette[-4]
     TARGET_TILE =   palette[1]
     MEMBRANE =     palette[2]
     GRID =          '#d3d3d2'
@@ -532,6 +532,7 @@ def figure_behavior_multistep(data_patha = None):
 
 if __name__ == '__main__':
     figure_environment()
+    sys.exit()
     datafiles = ['Media\Data\Data_Behavior_Rotation.json',
                  'Media\Data\Data_Behavior_No_Rotation.json',
                  ]
