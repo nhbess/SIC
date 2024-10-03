@@ -66,7 +66,7 @@ def plot_logistic():
 
     plt.ylabel('$\\alpha$ [rad]')
     plt.xlabel('$s$')
-    plt.legend(fontsize=9, framealpha=0.7, loc='upper left')
+    plt.legend(fontsize=8, framealpha=0.7, loc='upper left')
     #title
     plt.title('Logistic')
     #save
@@ -79,6 +79,7 @@ def plot_gaussian():
 
     params = [[0.01, 0.2,      0.1, 1],
               [0.01, 0.1,      0.05, 0.5],
+              [0.01, 0.3,      0.5, 0.8],
               TunableParameters.GAUSSIAN_PARAMS,
             ]
     
@@ -105,7 +106,7 @@ def plot_gaussian():
 
     plt.ylabel('$\\alpha$ [rad]')
     plt.xlabel('$s$')
-    plt.legend(fontsize=9, framealpha=0.7)#, loc='upper right')
+    plt.legend(fontsize=8, framealpha=0.7)#, loc='upper right')
     #title
     plt.title('Gaussian')
     plt.savefig(f'{_folders.MEDIA_PATH}/Gaussian.png', dpi=300, bbox_inches='tight')
@@ -117,7 +118,7 @@ def plot_fourier():
     S = np.linspace(0, 2*np.pi, 1000)
     np.random.seed(456)
 
-    params = [TunableParameters.FOURIER_PARAMS + np.random.uniform(-1, 1, 1 + 1 + 2*TunableParameters.FOURIER_TERMS)*0.5 for _ in range(2)]
+    params = [TunableParameters.FOURIER_PARAMS + np.random.uniform(-1, 1, 1 + 1 + 2*TunableParameters.FOURIER_TERMS)*0.5 for _ in range(3)]
     params.append(TunableParameters.FOURIER_PARAMS)
     palette = _colors.create_palette(len(params))
     
@@ -195,6 +196,6 @@ if __name__ == "__main__":
     TunableParameters.set_params()
 
     plot_lambdas()
-    #plot_logistic()
-    #plot_gaussian()
-    #plot_fourier()
+    plot_logistic()
+    plot_gaussian()
+    plot_fourier()
