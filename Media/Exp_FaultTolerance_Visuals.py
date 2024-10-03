@@ -73,7 +73,7 @@ def resultant_error():
             #plt.plot(X, upper_bound, linestyle='--', color=pallette[i], alpha=0.5)
             #plt.plot(X, lower_bound, linestyle='--', color=pallette[i], alpha=0.5)    
         
-        plt.legend()
+        plt.legend(fontsize = 8)
         plt.xlabel('Dead Tiles [%]')
         plt.ylabel(ylabel)
 
