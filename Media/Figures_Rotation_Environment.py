@@ -11,6 +11,8 @@ import os
 import sys
 #add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+CMAP = cm.GnBu
+
 class COLORS:
     import _colors
     palette = _colors.create_palette(10,normalize=True)
@@ -476,7 +478,7 @@ def figure_behavior_multistep(data_patha = None):
 
         if 'No_Rotation' in filename:
             signal_A = signal_A*0
-        ax.imshow(signal_A, cmap=cm.Blues, alpha=1, zorder=-1, extent=[0, N, 0, M], origin='lower')
+        ax.imshow(signal_A, cmap=CMAP, alpha=1, zorder=-1, extent=[0, N, 0, M], origin='lower')
         
         #plot signal_B
         #signal_B = signals_B[step_indexes[step]]
@@ -516,7 +518,7 @@ def figure_behavior_multistep(data_patha = None):
 
     #add colorbar
     cbar_ax = fig.add_axes([1, 0.055, 0.02, 0.85])
-    cbar = fig.colorbar(cm.ScalarMappable(cmap=cm.Blues), cax=cbar_ax)
+    cbar = fig.colorbar(cm.ScalarMappable(cmap=CMAP), cax=cbar_ax)
     cbar.set_label(f'Excitation Signal $s$', size=25)
     #cbar.set_ticks([0, 0.5, 1])
     cbar.ax.tick_params(labelsize=25)
@@ -530,7 +532,6 @@ def figure_behavior_multistep(data_patha = None):
 
 if __name__ == '__main__':
     figure_environment()
-    sys.exit()
     datafiles = ['Media\Data\Data_Behavior_Rotation.json',
                  'Media\Data\Data_Behavior_No_Rotation.json',
                  ]
