@@ -11,15 +11,15 @@ import os
 import sys
 #add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-CMAP = cm.GnBu
+CMAP = cm.Oranges
 
 class COLORS:
     import _colors
-    palette = _colors.create_palette(10,normalize=True)
+    palette = _colors.create_palette(9,normalize=True)
     #_colors.show_palette(palette, save=True, name='palette.png')
-    OBJECT =        palette[-1]
+    OBJECT =        palette[4]
     TARGET =        palette[0]
-    CONTACT_TILE =  palette[-4]
+    CONTACT_TILE =  palette[3]
     TARGET_TILE =   palette[1]
     MEMBRANE =     palette[2]
     GRID =          '#d3d3d2'
@@ -620,10 +620,8 @@ def figure_vortex(data_patha = None):
 
 if __name__ == '__main__':
     #figure_environment()
-    
-    figure_vortex(data_patha='Media\Data\Logistic_vortex.json')
-    figure_vortex(data_patha='Media\Data\Gaussian_vortex.json')
-    sys.exit()
+    #figure_vortex(data_patha='Media\Data\Logistic_vortex.json')
+    #figure_vortex(data_patha='Media\Data\Gaussian_vortex.json')
     datafiles = ['Media\Data\Data_Behavior_Rotation.json',
                  'Media\Data\Data_Behavior_No_Rotation.json',
                  ]
