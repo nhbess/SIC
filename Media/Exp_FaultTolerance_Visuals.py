@@ -70,8 +70,8 @@ def resultant_error():
             lower_bound = pos_error_means - pos_error_std
 
             # Plot the upper and lower bounds as dashed lines
-            #plt.plot(X, upper_bound, linestyle='--', color=pallette[i], alpha=0.5)
-            #plt.plot(X, lower_bound, linestyle='--', color=pallette[i], alpha=0.5)    
+            plt.plot(X, upper_bound, linestyle='--', color=pallette[i], alpha=0.5)
+            plt.plot(X, lower_bound, linestyle='--', color=pallette[i], alpha=0.5)    
         
         plt.legend(fontsize = 8)
         plt.xlabel('Dead Tiles [%]')
@@ -85,7 +85,8 @@ def resultant_error():
     #_plot_error(results_by_dead_tile, 'ANG_ERROR', 'Angle Error [$^\circ$]', 'ROBUST_ANG')
     _plot_error(results_by_dead_tile, 'ANGS_ERROR', 'Symmetry Free \nAngle Error [$^\circ$]', 'ROBUST_ANGS')
 
-    
+            
+
 
 if __name__ == '__main__':
     resultant_error()
