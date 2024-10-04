@@ -82,16 +82,6 @@ if __name__ == "__main__":
     
     NAMES = ['Discrete', 'Logistic', 'Gaussian', 'Fourier']
 
-
-
-
-
-    BEHAVIORS = [Behaviors.Fourier]
-    PARAMETERS = [TunableParameters.FOURIER_PARAMS]
-    NAMES = ['Fourier']
-
-
-
     N_GENERATIONS = 20
     POPULATION_SIZE = 10
     RUNS = 25
