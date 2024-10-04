@@ -64,6 +64,7 @@ def plot_logistic():
         label = f'$P$={format_number(param[1])} $L$={format_number(param[2])} $H$={format_number(param[3])}'
         plt.plot(S, A, label=label, color=palette[i], linestyle=linestyle)
 
+        print(f'Logistic: {A[-1]}')
     plt.ylabel('$\\alpha$ [rad]')
     plt.xlabel('$s$')
     plt.legend(fontsize=8, framealpha=0.7, loc='upper left')
@@ -104,6 +105,7 @@ def plot_gaussian():
 
         plt.plot(S, ANGLE, label=label, color=palette[i], linestyle=linestyle)
 
+        print(f'Gaussian: {ANGLE[-1]}')
     plt.ylabel('$\\alpha$ [rad]')
     plt.xlabel('$s$')
     plt.legend(fontsize=8, framealpha=0.7)#, loc='upper right')
