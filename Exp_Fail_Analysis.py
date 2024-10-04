@@ -15,7 +15,7 @@ if __name__ == '__main__':
     experiment_name = '_Fail_Analysis'
     _folders.set_experiment_folders(experiment_name)
 
-    seed = 50
+    seed = 0
     random.seed(seed)
     np.random.seed(seed)
 
@@ -70,7 +70,11 @@ if __name__ == '__main__':
                   "S": 180, 
                   "Z": 180}
     
-    RUNS = 100
+    RUNS = 500
+    SYMBOLS = [random.choice(["I", "O", "T", "J", "L", "S", "Z"]) for _ in range(RUNS)]
+    ANGLES_OBJECT = [random.random()*360 for _ in range(RUNS)]
+    ANGLES_TARGET = [random.random()*360 for _ in range(RUNS)]
+    
 
     results = {}
     def get_convergence_step(arr):
@@ -91,11 +95,12 @@ if __name__ == '__main__':
 
         for run in tqdm(range(RUNS)):
             setup['symbol'] = random.choice(SYMBOLS)
+
             simulator = Simulator(setup)
 
             simulator.tetromino.rect.center = (simulator.board.X*simulator.board.TILE_SIZE//2, simulator.board.Y*simulator.board.TILE_SIZE//2)            
-            simulator.tetromino.rotate(random.randint(0, 360), allow_max_rotation=False)
-
+            simulator.tetromino.rotate(ANGLES_OBJECT[run], allow_max_rotation=False)
+            simulator.target.set_angle(ANGLES_TARGET[run])
             run_data = simulator.run_simulation()
             
             #PERFORMANCE CALCULATION

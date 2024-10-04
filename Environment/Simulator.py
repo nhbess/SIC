@@ -71,13 +71,9 @@ class Simulator:
                 self.dh.add_data(TARGET_CENTER = self.target.center.tolist(), 
                                  TARGET_ANGLE = self.target.angle%360,
                                  TARGET_TILES = [tile.is_target for tile in self.board.tiles],
-                                 VTX = [tile.vector_translation[0] for tile in self.board.tiles],
-                                 VTY = [tile.vector_translation[1] for tile in self.board.tiles],
-                                 VRX = [tile.vector_rotation[0] for tile in self.board.tiles],
-                                 VRY = [tile.vector_rotation[1] for tile in self.board.tiles],
                                  TARGET_POLYGON = self.target.mask.outline())
                 #is any in vtx is not zero
-                print(any([tile.vector_translation[0] != 0 for tile in self.board.tiles]))
+                
         #Setting the window
         if self.setup['visualize']:
             self.window = pygame.display.set_mode((self.board.X*self.board.TILE_SIZE, self.board.Y*self.board.TILE_SIZE))
