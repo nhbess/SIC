@@ -74,7 +74,8 @@ if __name__ == '__main__':
     SYMBOLS = [random.choice(["I", "O", "T", "J", "L", "S", "Z"]) for _ in range(RUNS)]
     ANGLES_OBJECT = [random.random()*360 for _ in range(RUNS)]
     ANGLES_TARGET = [random.random()*360 for _ in range(RUNS)]
-    
+    POSITIONS = [(random.random()*setup['N']*setup['TILE_SIZE'], random.random()*setup['N']*setup['TILE_SIZE']) for _ in range(RUNS)]
+
 
     results = {}
     def get_convergence_step(arr):
@@ -98,7 +99,7 @@ if __name__ == '__main__':
 
             simulator = Simulator(setup)
 
-            simulator.tetromino.rect.center = (simulator.board.X*simulator.board.TILE_SIZE//2, simulator.board.Y*simulator.board.TILE_SIZE//2)            
+            simulator.tetromino.rect.center = POSITIONS[run]            
             simulator.tetromino.rotate(ANGLES_OBJECT[run], allow_max_rotation=False)
             simulator.target.set_angle(ANGLES_TARGET[run])
             run_data = simulator.run_simulation()
