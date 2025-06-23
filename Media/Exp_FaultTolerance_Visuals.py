@@ -53,7 +53,12 @@ def resultant_error():
 
     
     def _plot_error(results, metric, ylabel, filename):
-        pallette = _colors.create_palette(len(results_by_dead_tile))  
+        pallette = _colors.create_palette(len(results_by_dead_tile))
+        
+        # Define unique markers and line styles for each behavior
+        markers = ['o', 's', '^', 'D', 'v']  # circle, square, triangle up, diamond, triangle down
+        line_styles = ['-', '--', '-.', ':', '-']  # solid, dashed, dash-dot, dotted, solid
+        
         plt.subplots(figsize=(4, 2))
         for i, behavior in enumerate(results):
             pos_error = results[behavior][metric]
@@ -62,16 +67,24 @@ def resultant_error():
             X = np.arange(len(pos_error_means))
             X = X * 10
 
-            plt.scatter(X, pos_error_means, label=_correct_behavior_name(behavior), color=pallette[i])
-            plt.plot(X, pos_error_means, color=pallette[i])
+            # Use unique marker and line style for each behavior
+            marker = markers[i % len(markers)]
+            line_style = line_styles[i % len(line_styles)]
+
+            # Plot the line first (for legend)
+            plt.plot(X, pos_error_means, color=pallette[i], linestyle=line_style, linewidth=1.5,
+                    marker=marker, markersize=4, label=_correct_behavior_name(behavior))
+            
+            # Then plot the scatter points separately (without label to avoid duplicate legend entries)
+            plt.scatter(X, pos_error_means, color=pallette[i], marker=marker, s=30, zorder=5)
 
             # Calculate upper and lower bounds for the standard deviation
             upper_bound = pos_error_means + pos_error_std
             lower_bound = pos_error_means - pos_error_std
 
-            # Plot the upper and lower bounds as dashed lines
-            plt.plot(X, upper_bound, linestyle='--', color=pallette[i], alpha=0.5)
-            plt.plot(X, lower_bound, linestyle='--', color=pallette[i], alpha=0.5)    
+            # Plot the upper and lower bounds with the same line style but more transparent
+            plt.plot(X, upper_bound, linestyle=line_style, color=pallette[i], alpha=0.3, linewidth=1)
+            plt.plot(X, lower_bound, linestyle=line_style, color=pallette[i], alpha=0.3, linewidth=1)    
         
         plt.legend(fontsize = 8)
         plt.xlabel('Dead Tiles [%]')
