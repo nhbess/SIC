@@ -1,0 +1,18 @@
+[project]
+name = "sic-1"
+version = "0.1.0"
+description = "Swarm Inspired Controllers"
+authors = [
+    { name = "Nicolas Bessone", email = "nbes@itu.dk" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "pygame",
+    "matplotlib",
+    "shapely",
+    "pandas",
+    "imageio",
+    "tqdm",
+    "cma"
+] 
