@@ -47,10 +47,10 @@ def set_experiment_folders(experiment_name:str):
         os.makedirs(experiment_name)
 
     _set_folders({
-        'MODELS': f'{experiment_name}/{MODELS_PATH}',
-        'SIMULATIONS': f'{experiment_name}/{SIMULATIONS_PATH}',
-        'VISUALIZATIONS': f'{experiment_name}/{VISUALIZATIONS_PATH}',
-        'RESULTS': f'{experiment_name}/{RESULTS_PATH}',
+        'MODELS': f'{experiment_name}/{DEFAULT_FOLDERS["MODELS"]}',
+        'SIMULATIONS': f'{experiment_name}/{DEFAULT_FOLDERS["SIMULATIONS"]}',
+        'VISUALIZATIONS': f'{experiment_name}/{DEFAULT_FOLDERS["VISUALIZATIONS"]}',
+        'RESULTS': f'{experiment_name}/{DEFAULT_FOLDERS["RESULTS"]}',
     })
     _create_folders()
 

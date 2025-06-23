@@ -6,6 +6,13 @@ PALETTE = ["EF476F","FFD166","06D6A0","118AB2","073B4C"]
 
 FIG_SIZE = (6*0.75, 2*0.5)
 
+# Individual colors
+####################################################################################################
+MAIN = PALETTE[4]
+SECONDARY = PALETTE[4]
+TERTIARY = PALETTE[4]
+YELLOW = '#ffdd45'
+
 def create_palette(number_of_colors: int, normalize=True):
     def _create_color(value) -> tuple:
         value = max(0, min(1, value))

@@ -46,6 +46,9 @@ def plot_logistic():
         
     palette = _colors.create_palette(len(params))
     S = np.linspace(0, 1, 1000)
+    
+    # Define unique linestyles for each parameter set
+    linestyles = ['--', '-.', ':', '-']
 
     for i, param in enumerate(params):
         LAMBDA  = param[0]
@@ -55,14 +58,8 @@ def plot_logistic():
 
         A = SPAN/(1+np.exp(-SLOPE*(S - SHIFT)))
         
-        
-        #$\lambda$={format_number(param[0])}
-        if i == len(params)-1:
-            linestyle='--'
-        else:
-            linestyle='-'
         label = f'$P$={format_number(param[1])} $L$={format_number(param[2])} $H$={format_number(param[3])}'
-        plt.plot(S, A, label=label, color=palette[i], linestyle=linestyle)
+        plt.plot(S, A, label=label, color=palette[i], linestyle=linestyles[i])
 
         print(f'Logistic: {A[-1]}')
     plt.ylabel('$\\alpha$ [rad]')
@@ -87,6 +84,9 @@ def plot_gaussian():
     
     palette = _colors.create_palette(len(params))
     S = np.linspace(0, 1, 1000)
+    
+    # Define unique linestyles for each parameter set
+    linestyles = ['--', '-.', ':', '-']
 
     for i, param in enumerate(params):
         LAMBDA = param[0]
@@ -96,14 +96,8 @@ def plot_gaussian():
         
         ANGLE = np.exp(-np.power((S-C),2)/(np.power(A,2))) * (S-C)/(np.power(A,2))*B    
         
-        #$\lambda$={format_number(param[0])} 
         label = f'$A$={format_number(param[1])} $B$={format_number(param[2])} $C$={format_number(param[3])}'
-        if i == len(params)-1:
-            linestyle='--'
-        else:
-            linestyle='-'
-
-        plt.plot(S, ANGLE, label=label, color=palette[i], linestyle=linestyle)
+        plt.plot(S, ANGLE, label=label, color=palette[i], linestyle=linestyles[i])
 
         print(f'Gaussian: {ANGLE[-1]}')
     plt.ylabel('$\\alpha$ [rad]')
@@ -124,6 +118,9 @@ def plot_fourier():
     params.append(TunableParameters.FOURIER_PARAMS)
     palette = _colors.create_palette(len(params))
     
+    # Define unique linestyles for each parameter set
+    linestyles = ['--', '-.', ':', '-']
+    
     for i, param in enumerate(params):
         def compute_alpha(omega, s):
                     a0 = param[1]
@@ -140,15 +137,11 @@ def plot_fourier():
           
         ANGLE = compute_alpha(S, 1)
         ANGLE = np.clip(ANGLE, -np.pi, np.pi)
-        if i == len(params)-1:
-            linestyle='--'
-        else:
-            linestyle='-'
-        plt.plot(S, ANGLE, color=palette[i], linestyle=linestyle)
+        plt.plot(S, ANGLE, color=palette[i], linestyle=linestyles[i])
 
 
     plt.ylabel('$\\alpha$ [rad]')
-    plt.xlabel('$\omega$ [rad]')
+    plt.xlabel(r'$\omega$ [rad]')
 
 
     plt.xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi], [r'$0$', r'$\frac{\pi}{2}$', r'$\pi$', r'$\frac{3\pi}{2}$', r'$2\pi$'])
@@ -171,8 +164,12 @@ def plot_lambdas():
     N_UPDATE_STEPS = 50
     UPDATE_STEPS = np.arange(N_UPDATE_STEPS)
     pallete = _colors.create_palette(len(LAMBDAS))
+    
+    # Define unique linestyles for each lambda curve
+    linestyles = ['--', '-.', ':', '-']
+    
     plt.figure(figsize=(6, 2))
-    plt.axvline(x=N_UPDATE_STEPS//2, color='black', linestyle='--')
+    plt.axvline(x=N_UPDATE_STEPS//2, color='grey', linestyle='--', alpha = 0.5)
 
     for i, l in enumerate(LAMBDAS):
         S = [0]
@@ -182,7 +179,7 @@ def plot_lambdas():
             S.append(s)
 
         S = S[0:-1]
-        plt.plot(UPDATE_STEPS,S, label=f"{NAMES[i]} $\lambda$ = {np.round(l,2)}", color=pallete[i])
+        plt.plot(UPDATE_STEPS,S, label=f"{NAMES[i]} $\\lambda$ = {np.round(l,2)}", color=pallete[i], linestyle=linestyles[i])
 
 
     plt.text(N_UPDATE_STEPS*0.25, 0.2, '$I = 1$', fontsize=12)

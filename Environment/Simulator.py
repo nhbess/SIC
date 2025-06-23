@@ -17,6 +17,7 @@ class Simulator:
     def __init__(self, setup:dict):
         self.pause = False
         self.setup = setup
+        self.setup['new_data_scheme'] = self.setup.get('new_data_scheme', False)
         self.board = Board(self.setup['N'], self.setup['TILE_SIZE'])        
 
         #End condition variables
@@ -27,12 +28,37 @@ class Simulator:
         #Data variables
         if self.setup['save_data']:
             self.dh = DH()
-            self.dh.add_data( 
-                BOARD_SIZE = self.setup['N'],
-                TILE_SIZE = self.setup['TILE_SIZE'],
-                SHAPE = self.setup['symbol'],
-                RESOLUTION = self.setup['resolution'],
-                DEAD_TILES = self.setup['dead_tiles'])
+            if self.setup['new_data_scheme']:
+                self.dh.data = {
+                    'setup': {
+                        'BOARD_SIZE' : self.setup['N'],
+                        'TILE_SIZE' : self.setup['TILE_SIZE'],
+                        'SHAPE' : self.setup['symbol'],
+                        'RESOLUTION' : self.setup['resolution'],
+                        'DEAD_TILES' : self.setup['dead_tiles']
+                    },
+                    'results': {
+                        'time_series': {
+                            'object_center_x': [],
+                            'object_center_y': [],
+                            'object_angle': [],
+                            'coverage': [],
+                            'error_position': [],
+                            'error_angle': []
+                        },
+                        'MEMBRANE_TILES': []
+                    }
+                }
+                if self.setup.get('save_data_points', False):
+                    self.dh.data['results']['system_data'] = []
+                    
+            else:
+                self.dh.add_data( 
+                    BOARD_SIZE = self.setup['N'],
+                    TILE_SIZE = self.setup['TILE_SIZE'],
+                    SHAPE = self.setup['symbol'],
+                    RESOLUTION = self.setup['resolution'],
+                    DEAD_TILES = self.setup['dead_tiles'])
 
 
         if self.setup['visualize']: 
@@ -68,10 +94,19 @@ class Simulator:
             self.target.center = self.target.get_geometric_center()
             self.set_target_shape_tiles()
             if self.setup['save_data']:
-                self.dh.add_data(TARGET_CENTER = self.target.center.tolist(), 
-                                 TARGET_ANGLE = self.target.angle%360,
-                                 TARGET_TILES = [tile.is_target for tile in self.board.tiles],
-                                 TARGET_POLYGON = self.target.mask.outline())
+                if self.setup['new_data_scheme']:
+                    self.dh.data['setup']['TARGET_CENTER'] = self.target.center.tolist()
+                    self.dh.data['setup']['TARGET_ANGLE'] = self.target.angle % 360
+                    target_tiles = [tile for tile in self.board.tiles if tile.is_target]
+                    self.dh.data['setup']['TARGET_TILES'] = {
+                        'x': [tile.x for tile in target_tiles],
+                        'y': [tile.y for tile in target_tiles]
+                    }
+                else:
+                    self.dh.add_data(TARGET_CENTER = self.target.center.tolist(), 
+                                     TARGET_ANGLE = self.target.angle%360,
+                                     TARGET_TILES = [tile.is_target for tile in self.board.tiles],
+                                     TARGET_POLYGON = self.target.mask.outline())
                 #is any in vtx is not zero
                 
         #Setting the window
@@ -152,19 +187,24 @@ class Simulator:
             if not self.pause:
                 #self.board.get_coverage()
                 if self.setup['save_data']:
-                    #data_system = self.board.board_info()
-                    #data_system['object_center'] = self.tetromino.center.tolist()
-                    #data_system['object_angle'] = self.tetromino.angle
-                    self.dh.add_data(object_center_x = self.tetromino.center.tolist()[0],
-                                     object_center_y = self.tetromino.center.tolist()[1],
-                                     object_angle = self.tetromino.angle%360,
-                                     coverage = self.board.get_coverage())
-                    if save_sys_data:
-                        sys_data = self.board.get_system_data()
-                        self.dh.add_data_list(**sys_data)
-                        tetro_polygon = self.tetromino.mask.outline()
-                        tetro_polygon = [list(point) for point in tetro_polygon]
-                        self.dh.add_data_list(TETROMINO_POLYGON = tetro_polygon)
+                    if self.setup['new_data_scheme']:
+                        if self.setup.get('save_data_points', False):
+                            sys_data = self.board.get_system_data()
+                            self.dh.data['results']['system_data'].append(sys_data)
+                    else:
+                        #data_system = self.board.board_info()
+                        #data_system['object_center'] = self.tetromino.center.tolist()
+                        #data_system['object_angle'] = self.tetromino.angle
+                        self.dh.add_data(object_center_x = self.tetromino.center.tolist()[0],
+                                        object_center_y = self.tetromino.center.tolist()[1],
+                                        object_angle = self.tetromino.angle%360,
+                                        coverage = self.board.get_coverage())
+                        if save_sys_data:
+                            sys_data = self.board.get_system_data()
+                            self.dh.add_data_list(**sys_data)
+                            tetro_polygon = self.tetromino.mask.outline()
+                            tetro_polygon = [list(point) for point in tetro_polygon]
+                            self.dh.add_data_list(TETROMINO_POLYGON = tetro_polygon)
 
 
             if self.setup['visualize']:
@@ -218,6 +258,29 @@ class Simulator:
                     err_ang = abs(self.tetromino.angle - self.target.angle)
                     self.error_position.append(err_pos)
                     self.error_angle.append(err_ang)
+                    if self.setup['save_data'] and self.setup['new_data_scheme']:
+                        ts = self.dh.data['results']['time_series']
+                        ts['object_center_x'].append(self.tetromino.center.tolist()[0])
+                        ts['object_center_y'].append(self.tetromino.center.tolist()[1])
+                        ts['object_angle'].append(self.tetromino.angle%360)
+                        ts['coverage'].append(self.board.get_coverage())
+                        ts['error_position'].append(err_pos)
+                        ts['error_angle'].append(err_ang)
+
+                        membrane_tiles = []
+                        for tile in self.board.tiles:
+                            if not tile.is_target:
+                                for neighbor in tile.neighbors:
+                                    if neighbor.is_target:
+                                        membrane_tiles.append(tile)
+                                        break
+                        
+                        membrane_data_timestep = {
+                            'x': [tile.x for tile in membrane_tiles],
+                            'y': [tile.y for tile in membrane_tiles],
+                            'signal': [tile.S for tile in membrane_tiles]
+                        }
+                        self.dh.data['results']['MEMBRANE_TILES'].append(membrane_data_timestep)
 
                     if len(self.error_position) == self.memory_length:
                         first_half_pos = [self.error_position[i] for i in range(self.memory_length//2)]
