@@ -131,7 +131,7 @@ python Exp_FaultTolerance.py
 - **cma**: CMA-ES optimization
 
 ## Project Structure
-'''
+```
 ├── main.py # Main entry point
 ├── Behaviors.py # Control behavior implementations
 ├── TunableParameters.py # Parameter management
@@ -150,7 +150,7 @@ python Exp_FaultTolerance.py
 ├── Fault_Tolerance/ # Fault tolerance results
 ├── Optimization/ # Optimization results
 └── Media/ # Visualizations and figures
-'''
+```
 
 ## Research Applications
 
