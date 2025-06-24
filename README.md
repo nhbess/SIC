@@ -23,39 +23,48 @@ Swarm Inspired Controllers (SIC) is a research project that implements and compa
 
 The framework implements five different swarm-inspired control strategies. Here are examples of each behavior in action:
 
-### 1. Information Diffusion (InfDiff)
-Traditional information diffusion approach for shape manipulation (Global behavior)
-
 <p align="center">
-  <img src="Media/Animations/InfDiff.gif" width="200" alt="InfDiff Behavior">
-</p>
-
-### 2. Discrete Control
-Discrete state-based control with excitation signals (Local behavior)
-
-<p align="center">
-  <img src="Media/Animations/Discrete.gif" width="200" alt="Discrete Behavior">
-</p>
-
-### 3. Logistic Control
-Continuous control using logistic functions for symmetry breaking (Local behavior)
-
-<p align="center">
-  <img src="Media/Animations/Logistic.gif" width="200" alt="Logistic Behavior">
-</p>
-
-### 4. Gaussian Control
-Gaussian-based control for smooth transitions (Local behavior)
-
-<p align="center">
-  <img src="Media/Animations/Gaussian.gif" width="200" alt="Gaussian Behavior">
-</p>
-
-### 5. Fourier Control
-Fourier series-based control for complex behaviors (Local behavior)
-
-<p align="center">
-  <img src="Media/Animations/Fourier.gif" width="200" alt="Fourier Behavior">
+  <table>
+    <tr>
+      <td align="center">
+        <strong>Information Diffusion (InfDiff)</strong><br>
+        Traditional information diffusion approach for shape manipulation
+      </td>
+      <td align="center">
+        <strong>Discrete Control</strong><br>
+        Discrete state-based control with excitation signals
+      </td>
+      <td align="center">
+        <strong>Logistic Control</strong><br>
+        Continuous control using logistic functions for symmetry breaking
+      </td>
+      <td align="center">
+        <strong>Gaussian Control</strong><br>
+        Gaussian-based control for smooth transitions
+      </td>
+      <td align="center">
+        <strong>Fourier Control</strong><br>
+        Fourier series-based control for complex behaviors
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="Media/Animations/InfDiff.gif" width="200" alt="InfDiff Behavior" loop>
+      </td>
+      <td align="center">
+        <img src="Media/Animations/Discrete.gif" width="200" alt="Discrete Behavior" loop>
+      </td>
+      <td align="center">
+        <img src="Media/Animations/Logistic.gif" width="200" alt="Logistic Behavior" loop>
+      </td>
+      <td align="center">
+        <img src="Media/Animations/Gaussian.gif" width="200" alt="Gaussian Behavior" loop>
+      </td>
+      <td align="center">
+        <img src="Media/Animations/Fourier.gif" width="200" alt="Fourier Behavior" loop>
+      </td>
+    </tr>
+  </table>
 </p>
 
 ## Architecture
