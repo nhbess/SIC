@@ -27,7 +27,7 @@ The framework implements five different swarm-inspired control strategies. Here 
 Traditional information diffusion approach for shape manipulation (Global behavior)
 
 <p align="center">
-  <img src="Media/Animations/InfDiff.gif" width="400" alt="InfDiff Behavior">
+  <img src="Media/Animations/InfDiff.gif" width="200" alt="InfDiff Behavior">
 </p>
 
 ### 2. Discrete Control
