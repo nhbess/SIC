@@ -47,9 +47,6 @@ if __name__ == "__main__":
         'dead_tiles': 0,
         'save_animation': False,
         'max_iterations': 500,
-        
-        'target_position': (200, 150),  # (x, y) in pixels
-        'target_angle': 45,  # angle in degrees
     }
     
     

@@ -82,18 +82,14 @@ class Simulator:
         if self.setup['target_shape']:
             self.target = Tetromino(self.setup['symbol'], self.setup['TILE_SIZE'], resolution=self.setup['resolution'])
             
-            # Use target position from setup if provided, otherwise use center
-            if 'target_position' in self.setup:
-                self.target.rect.center = self.setup['target_position']
-            else:
-                self.target.rect.center = (self.board.X*self.board.TILE_SIZE//2, self.board.Y*self.board.TILE_SIZE//2)
+            #Random target
+            TARGET_ANGLE = 180
+            self.target.set_angle(random.randint(-TARGET_ANGLE, TARGET_ANGLE))
+            self.target.rect.center = (self.board.X*self.board.TILE_SIZE//2, self.board.Y*self.board.TILE_SIZE//2)
             
-            # Use target angle from setup if provided, otherwise random
-            if 'target_angle' in self.setup:
-                self.target.set_angle(self.setup['target_angle'])
-            else:
-                TARGET_ANGLE = 180
-                self.target.set_angle(random.randint(-TARGET_ANGLE, TARGET_ANGLE))
+            #Fixed target
+            #self.target.set_angle(90)
+            #self.target.rect.center = (self.board.X*(self.board.TILE_SIZE -5), self.board.Y*(self.board.TILE_SIZE -10))
             
             self.target.center = self.target.get_geometric_center()
             self.set_target_shape_tiles()
