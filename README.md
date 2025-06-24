@@ -34,28 +34,28 @@ Traditional information diffusion approach for shape manipulation (Global behavi
 Discrete state-based control with excitation signals (Local behavior)
 
 <p align="center">
-  <img src="Media/Animations/Discrete.gif" width="400" alt="Discrete Behavior">
+  <img src="Media/Animations/Discrete.gif" width="200" alt="Discrete Behavior">
 </p>
 
 ### 3. Logistic Control
 Continuous control using logistic functions for symmetry breaking (Local behavior)
 
 <p align="center">
-  <img src="Media/Animations/Logistic.gif" width="400" alt="Logistic Behavior">
+  <img src="Media/Animations/Logistic.gif" width="200" alt="Logistic Behavior">
 </p>
 
 ### 4. Gaussian Control
 Gaussian-based control for smooth transitions (Local behavior)
 
 <p align="center">
-  <img src="Media/Animations/Gaussian.gif" width="400" alt="Gaussian Behavior">
+  <img src="Media/Animations/Gaussian.gif" width="200" alt="Gaussian Behavior">
 </p>
 
 ### 5. Fourier Control
 Fourier series-based control for complex behaviors (Local behavior)
 
 <p align="center">
-  <img src="Media/Animations/Fourier.gif" width="400" alt="Fourier Behavior">
+  <img src="Media/Animations/Fourier.gif" width="200" alt="Fourier Behavior">
 </p>
 
 ## Architecture
