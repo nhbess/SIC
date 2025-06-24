@@ -24,24 +24,39 @@ Swarm Inspired Controllers (SIC) is a research project that implements and compa
 The framework implements five different swarm-inspired control strategies. Here are examples of each behavior in action:
 
 ### 1. Information Diffusion (InfDiff)
-![InfDiff Behavior](Media/Animations/InfDiff.gif)
-*Traditional information diffusion approach for shape manipulation (Global behavior)*
+Traditional information diffusion approach for shape manipulation (Global behavior)
+
+<p align="center">
+  <img src="Media/Animations/InfDiff.gif" width="400" alt="InfDiff Behavior">
+</p>
 
 ### 2. Discrete Control
-![Discrete Behavior](Media/Animations/Discrete.gif)
-*Discrete state-based control with excitation signals (Local behavior)*
+Discrete state-based control with excitation signals (Local behavior)
+
+<p align="center">
+  <img src="Media/Animations/Discrete.gif" width="400" alt="Discrete Behavior">
+</p>
 
 ### 3. Logistic Control
-![Logistic Behavior](Media/Animations/Logistic.gif)
-*Continuous control using logistic functions for symmetry breaking (Local behavior)*
+Continuous control using logistic functions for symmetry breaking (Local behavior)
+
+<p align="center">
+  <img src="Media/Animations/Logistic.gif" width="400" alt="Logistic Behavior">
+</p>
 
 ### 4. Gaussian Control
-![Gaussian Behavior](Media/Animations/Gaussian.gif)
-*Gaussian-based control for smooth transitions (Local behavior)*
+Gaussian-based control for smooth transitions (Local behavior)
+
+<p align="center">
+  <img src="Media/Animations/Gaussian.gif" width="400" alt="Gaussian Behavior">
+</p>
 
 ### 5. Fourier Control
-![Fourier Behavior](Media/Animations/Fourier.gif)
-*Fourier series-based control for complex behaviors (Local behavior)*
+Fourier series-based control for complex behaviors (Local behavior)
+
+<p align="center">
+  <img src="Media/Animations/Fourier.gif" width="400" alt="Fourier Behavior">
+</p>
 
 ## Architecture
 
