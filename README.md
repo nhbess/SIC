@@ -19,6 +19,30 @@ Swarm Inspired Controllers (SIC) is a research project that implements and compa
 - **Contact Sensing**: Tiles detect when they are in contact with objects
 - **Coverage Metrics**: Performance measured by how well tiles cover target shapes
 
+## Control Behaviors in Action
+
+The framework implements five different swarm-inspired control strategies. Here are examples of each behavior in action:
+
+### 1. Information Diffusion (InfDiff)
+![InfDiff Behavior](Media/Animations/InfDiff.gif)
+*Traditional information diffusion approach for shape manipulation (Global behavior)*
+
+### 2. Discrete Control
+![Discrete Behavior](Media/Animations/Discrete.gif)
+*Discrete state-based control with excitation signals (Local behavior)*
+
+### 3. Logistic Control
+![Logistic Behavior](Media/Animations/Logistic.gif)
+*Continuous control using logistic functions for symmetry breaking (Local behavior)*
+
+### 4. Gaussian Control
+![Gaussian Behavior](Media/Animations/Gaussian.gif)
+*Gaussian-based control for smooth transitions (Local behavior)*
+
+### 5. Fourier Control
+![Fourier Behavior](Media/Animations/Fourier.gif)
+*Fourier series-based control for complex behaviors (Local behavior)*
+
 ## Architecture
 
 ### Main Components

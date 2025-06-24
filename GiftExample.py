@@ -6,21 +6,15 @@ import sys
 environment_folder = 'Environment'
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), environment_folder))
 import random
-import numpy as np
+import numpy as np  
 from Environment.Simulator import Simulator
 from Environment.Tile import Tile
 from Behaviors import Behaviors
 from TunableParameters import TunableParameters
 
-if __name__ == "__main__":
-    seed = random.randint(0, 1000000)    
-    print(f'Random seed: {seed}')
+def run_simulation(behavior, name, seed):
     random.seed(seed)
     np.random.seed(seed)
-
-    TunableParameters.set_params()
-    Tile.execute_behavior = Behaviors.InfDiff
-
 
     setup_0 = {
         'N' : 20,
@@ -45,7 +39,7 @@ if __name__ == "__main__":
         'file_name': 'test',
 
         'dead_tiles': 0,
-        'save_animation': False,
+        'save_animation': name,
         'max_iterations': 500,
     }
     
@@ -56,3 +50,18 @@ if __name__ == "__main__":
     setup_0['resolution'] = 2
     simulator = Simulator(setup_0)
     simulator.run_simulation()
+
+if __name__ == "__main__":
+    seed = random.randint(0, 1000000)    
+    print(f'Random seed: {seed}')
+
+    TunableParameters.set_params()
+
+    behaviors = [Behaviors.Gaussian, Behaviors.Logistic, Behaviors.Fourier, Behaviors.Discrete, Behaviors.InfDiff] 
+    names = ['Gaussian', 'Logistic', 'Fourier', 'Discrete', 'InfDiff']
+
+    for behavior, name in zip(behaviors, names):
+        Tile.execute_behavior = behavior
+        run_simulation(behavior, name, seed = seed)
+
+
