@@ -173,6 +173,97 @@ def plot_fail_analysis_boxplot(results):
     plt.savefig(file_path, bbox_inches='tight', dpi=600)
     #plt.clf()
 
+def write_table(results):
+    """Generate LaTeX table with angle error statistics by shape and behavior"""
+    
+    BEHAVIORS = list(results.keys())
+    SYMBOLS = ["L", "O", "T", "I", "S", "Z", "J"]
+    
+    # Initialize table data structure
+    table = {}
+    for behavior in BEHAVIORS:
+        table[behavior] = {}
+        shapes = results[behavior]['SHAPES']
+        er_angles = results[behavior]['ER_ANGS']
+        
+        # Group data by shape
+        shape_data = {}
+        for shape, angle in zip(shapes, er_angles):
+            if shape not in shape_data:
+                shape_data[shape] = []
+            shape_data[shape].append(angle)
+        
+        # Calculate statistics for each shape
+        for symbol in SYMBOLS:
+            if symbol in shape_data:
+                mean = np.mean(shape_data[symbol])
+                std = np.std(shape_data[symbol])
+                table[behavior][symbol] = {'mean': mean, 'std': std, 'count': len(shape_data[symbol])}
+            else:
+                table[behavior][symbol] = {'mean': 0, 'std': 0, 'count': 0}
+    
+    # Generate LaTeX table
+    string = '\\begin{table}\n\\centering\n\\caption{Angle error analysis by tetromino shape and behavior.}\n\\label{tab:fail_analysis}\n'
+    string += '\\begin{tabular}{|l|c|c|c|c|c|}\n\\hline\n'
+    
+    # Header row
+    string += 'Shape & ' + ' & '.join([f'\\textbf{{{_correct_behavior_name(b)}}}' for b in BEHAVIORS]) + ' \\\\ \\hline\n'
+    
+    # Data rows for each shape
+    for symbol in SYMBOLS:
+        # Find best and second-best (minimum absolute) means for this shape across behaviors
+        means = [table[behavior][symbol]['mean'] for behavior in BEHAVIORS if table[behavior][symbol]['count'] > 0]
+        if means:
+            abs_means = [abs(mean) for mean in means]
+            sorted_abs_means = sorted(abs_means)
+            
+            if len(sorted_abs_means) >= 1:
+                min_abs_mean = sorted_abs_means[0]
+                best_mean = means[abs_means.index(min_abs_mean)]
+            else:
+                best_mean = float('inf')
+                
+            if len(sorted_abs_means) >= 2:
+                second_min_abs_mean = sorted_abs_means[1]
+                second_best_mean = means[abs_means.index(second_min_abs_mean)]
+            else:
+                second_best_mean = float('inf')
+        else:
+            best_mean = float('inf')
+            second_best_mean = float('inf')
+        
+        row = f'\\textbf{{{symbol}}} & '
+        values = []
+        
+        for behavior in BEHAVIORS:
+            if table[behavior][symbol]['count'] > 0:
+                mean = table[behavior][symbol]['mean']
+                std = table[behavior][symbol]['std']
+                
+                # Format the value
+                if mean == best_mean and mean != 0:
+                    values.append(f'\\textbf{{{mean:.2f} $\\pm$ {std:.2f}}}')
+                elif mean == second_best_mean and mean != 0:
+                    values.append(f'\\textit{{{mean:.2f} $\\pm$ {std:.2f}}}')
+                else:
+                    values.append(f'{mean:.2f} $\\pm$ {std:.2f}')
+            else:
+                values.append('--')
+        
+        row += ' & '.join(values) + ' \\\\ \\hline\n'
+        string += row
+    
+    string += '\\multicolumn{' + str(len(BEHAVIORS) + 1) + '}{l}{\\footnotesize{Values show mean $\\pm$ std of angle errors [$^\\circ$]. Best results in \\textbf{bold}, second-best results in \\textit{italics}.}} \\\\\n'
+    string += '\\end{tabular}\n\\end{table}'
+    
+    # Save to file
+    table_path = f'{_folders.RESULTS_PATH}/table.txt'
+    with open(table_path, 'w') as file:
+        file.write(string)
+    
+    print(f"LaTeX table saved to: {table_path}")
+    return string
+
 
 if __name__ == '__main__':
     filename = f'{_folders.RESULTS_PATH}/results.json'
@@ -183,4 +274,4 @@ if __name__ == '__main__':
     plot_fail_analysis_shapes(results)
     plot_fail_analysis_boxplot(results)
     
-    #write_table(results)
+    write_table(results)

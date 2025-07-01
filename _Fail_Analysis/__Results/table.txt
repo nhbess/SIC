@@ -1,0 +1,17 @@
+\begin{table}
+\centering
+\caption{Angle error analysis by tetromino shape and behavior.}
+\label{tab:fail_analysis}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Shape & \textbf{InfDiff} & \textbf{Discrete} & \textbf{Logistic} & \textbf{Gaussian} & \textbf{Fourier} \\ \hline
+\textbf{L} & -5.52 $\pm$ 10.77 & -24.12 $\pm$ 54.44 & \textit{-3.73 $\pm$ 22.51} & 5.34 $\pm$ 91.60 & \textbf{-2.74 $\pm$ 14.10} \\ \hline
+\textbf{O} & \textit{1.11 $\pm$ 27.15} & 3.85 $\pm$ 36.37 & 6.56 $\pm$ 32.23 & -3.62 $\pm$ 34.36 & \textbf{-0.11 $\pm$ 33.91} \\ \hline
+\textbf{T} & \textbf{-3.72 $\pm$ 7.64} & -16.03 $\pm$ 48.56 & \textit{-5.38 $\pm$ 16.26} & 30.08 $\pm$ 71.30 & -12.07 $\pm$ 46.63 \\ \hline
+\textbf{I} & 6.92 $\pm$ 46.00 & 7.91 $\pm$ 38.74 & \textbf{0.38 $\pm$ 6.12} & \textit{-4.64 $\pm$ 37.01} & -9.29 $\pm$ 44.12 \\ \hline
+\textbf{S} & 11.14 $\pm$ 43.66 & -5.80 $\pm$ 55.92 & -6.99 $\pm$ 44.88 & \textbf{-1.39 $\pm$ 44.56} & \textit{4.83 $\pm$ 42.92} \\ \hline
+\textbf{Z} & -3.31 $\pm$ 18.86 & \textbf{1.09 $\pm$ 34.13} & 4.96 $\pm$ 37.41 & \textit{1.82 $\pm$ 50.64} & 3.79 $\pm$ 48.43 \\ \hline
+\textbf{J} & -10.06 $\pm$ 25.34 & -13.59 $\pm$ 70.87 & \textbf{-2.37 $\pm$ 23.65} & 55.91 $\pm$ 74.38 & \textit{-4.53 $\pm$ 20.46} \\ \hline
+\multicolumn{6}{l}{\footnotesize{Values show mean $\pm$ std of angle errors [$^\circ$]. Best results in \textbf{bold}, second-best results in \textit{italics}.}} \\
+\end{tabular}
+\end{table}
