@@ -303,7 +303,8 @@ class Simulator:
                         #print("diff_pos: ", diff_pos, "diff_ang: ", diff_ang)
 
                         min_diff = 5
-                        if diff_pos < min_diff and diff_ang < min_diff:
+                        # Only stop early if early_stop is enabled (default True)
+                        if self.setup.get('early_stop', True) and diff_pos < min_diff and diff_ang < min_diff:
                             #print("Success! approximate")
                             if self.setup['save_data']: return self.dh.data
                             if self.setup['save_animation']:

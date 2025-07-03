@@ -1,6 +1,5 @@
 import json
 import random
-
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
@@ -15,6 +14,9 @@ from Environment.Simulator import Simulator
 from Environment.Tile import Tile
 from Environment.Tetromino import Tetromino
 from TunableParameters import TunableParameters
+
+# Global seed for reproducibility
+GLOBAL_SEED = 1
 
 SYMMETRIES = {
     'T': 360, 'L': 360, 'J': 360, 'S': 180, 'Z': 180, 'I': 180, 'O': 90
@@ -31,108 +33,156 @@ def run_simulation():
     experiment_name = '_Convergence_Analysis'
     _folders.set_experiment_folders(experiment_name)
 
-    # 2. DEFINE SIMULATION PARAMETERS
-    # Use a fixed seed to ensure all behaviors face the exact same starting conditions
-    seed = np.random.randint(0, 1000000)
-    print(f"Seed: {seed}")
+    # 2. SET GLOBAL SEED FOR REPRODUCIBILITY
+    print(f"Global Seed: {GLOBAL_SEED}")
+    random.seed(GLOBAL_SEED)
+    np.random.seed(GLOBAL_SEED)
 
     TILE_SIZE = 20
     setup = {
-        'N' : 20,
-        'TILE_SIZE' : TILE_SIZE,
+        'N': 20,
+        'TILE_SIZE': TILE_SIZE,
         'object': True,
-        'symbol': 'T',  # Use a single shape for consistent comparison
+        'symbol': 'T',  # Fixed shape for all behaviors
         'target_shape': True,
-        'show_tetromines' : False,
-        'show_tetromino_contour' : True,
+        'show_tetromines': False,
+        'show_tetromino_contour': True,
         
         'resolution': 2,
 
-        'n_random_targets' : 0,
+        'n_random_targets': 0,
         'shuffle_targets': False,
         
         'delay': False,
-        'visualize': False, # Set to True to watch simulations. Runs slower.
+        'visualize': False,
 
         'save_data': True,
-        'new_data_scheme': True,
+        'data_tiles': False,
+        'data_objet_target': False,
         'file_name': 'defaultname',
 
         'dead_tiles': 0,
-        # Save an animation (GIF) of the simulation for each behavior
-        'save_animation': True, 
-        'max_iterations': 100, # Set a max iteration to prevent infinite loops
-        'early_stop': False
+        'save_animation': False,
+        'max_iterations': 250,
+        'early_stop': False,  # Disable early stopping for convergence analysis
     }
 
-    # 3. DEFINE BEHAVIORS TO COMPARE
-    BEHAVIORS_TO_TEST = {
-        'Discrete': Behaviors.Discrete,
-        #'Logistic': Behaviors.Logistic,
-        #'Gaussian': Behaviors.Gaussian,
-        #'Fourier': Behaviors.Fourier,
+    # 3. DEFINE BEHAVIORS TO COMPARE (same as Exp_Comparison)
+    BEHAVIORS = [
+        Behaviors.InfDiff, 
+        Behaviors.Discrete,
+        Behaviors.Logistic,
+        Behaviors.Gaussian,
+        Behaviors.Fourier,
+    ]
+    
+    BEHAVIORS_NAMES = [
+        'InfDiff', 
+        'Discrete', 
+        'Logistic', 
+        'Gaussian', 
+        'Fourier'
+    ]
+    
+    SYMMETRIES = {
+        "I": 180, 
+        "O": 90, 
+        "T": 360, 
+        "J": 360, 
+        "L": 360, 
+        "S": 180, 
+        "Z": 180
     }
+
+    def calculate_metrics_over_time(run_data):
+        """Calculate error metrics at each timestep"""
+        shape = run_data['SHAPE']
+        target_center = np.array(run_data['TARGET_CENTER']) / TILE_SIZE
+        target_angle = run_data['TARGET_ANGLE']
+        
+        # Time series data
+        centers = np.array([run_data['object_center_x'], run_data['object_center_y']]).T / TILE_SIZE
+        angles = np.array(run_data['object_angle'])
+        coverages = np.array(run_data['coverage'])
+        
+        # Calculate errors over time
+        error_positions = np.linalg.norm(centers - target_center, axis=1)
+        
+        # Angle errors considering symmetry (this is the one that makes sense)
+        target_angle_sym = target_angle % SYMMETRIES[shape]
+        angles_sym = angles % SYMMETRIES[shape]
+        error_angles_symmetry = np.abs(target_angle_sym - angles_sym)
+        error_angles_symmetry = np.minimum(error_angles_symmetry, SYMMETRIES[shape] - error_angles_symmetry)
+        
+        return {
+            'error_positions': error_positions,
+            'error_angles_symmetry': error_angles_symmetry,
+            'coverages': coverages,
+            'timesteps': list(range(len(coverages)))
+        }
 
     # 4. RUN EXPERIMENT
-    print(f"Starting Convergence Analysis Experiment for shape: {setup['symbol']}")
+    print("Starting Convergence Analysis Experiment")
+    print("Single run per behavior with fixed initial conditions")
     
-    # Load optimal parameters if they exist
     TunableParameters.set_params()
     TunableParameters.print_params()
 
     full_results = {}
 
-    for name, behavior in tqdm(BEHAVIORS_TO_TEST.items(), desc="Running Behaviors"):
-        print(f"\nRunning behavior: {name}")
+    for behavior, behavior_name in tqdm(zip(BEHAVIORS, BEHAVIORS_NAMES), desc="Running Behaviors"):
+        print(f"\nRunning behavior: {behavior_name}")
         
-        # Reset seed for each behavior to ensure identical starting conditions
-        random.seed(seed)
-        np.random.seed(seed)
+        # Reset to same seed for each behavior to ensure identical starting conditions
+        random.seed(GLOBAL_SEED)
+        np.random.seed(GLOBAL_SEED)
         
         Tile.execute_behavior = behavior
         
-        # Set a unique path for each animation
-        animation_path = f'{_folders.VISUALIZATIONS_PATH}/{name}_convergence'
-        current_setup = setup.copy()
-        current_setup['save_animation'] = animation_path
-
-        simulator = Simulator(current_setup)
+        # Use fixed shape T for all behaviors
+        simulator = Simulator(setup)
+        run_data = simulator.run_simulation()
         
-        # The run_simulation method returns a dictionary with the time-series data
-        run_data = simulator.run_simulation(save_sys_data=True)
-        
-        # Store the collected data
-        if run_data:
-            full_results[name] = run_data
+        if run_data and 'coverage' in run_data:
+            metrics = calculate_metrics_over_time(run_data)
+            
+            # Store single run data
+            full_results[behavior_name] = {
+                'error_positions': metrics['error_positions'],
+                'error_angles_symmetry': metrics['error_angles_symmetry'],
+                'coverages': metrics['coverages'],
+                'timesteps': metrics['timesteps']
+            }
         else:
-            print(f"Warning: No data returned for behavior {name}. Simulation might have timed out or failed.")
-            full_results[name] = {}
+            print(f"Warning: No data returned for behavior {behavior_name}")
+            full_results[behavior_name] = {}
 
+    # 5. SAVE RESULTS
+    results_path = f'{_folders.RESULTS_PATH}/convergence_results.json'
+    
+    # Convert numpy arrays to lists for JSON serialization
+    json_results = {}
+    for behavior_name, data in full_results.items():
+        if data:  # Check if data exists
+            json_results[behavior_name] = {
+                'error_positions': data['error_positions'].tolist(),
+                'error_angles_symmetry': data['error_angles_symmetry'].tolist(),
+                'coverages': data['coverages'].tolist(),
+                'timesteps': data['timesteps']
+            }
+        else:
+            json_results[behavior_name] = {}
+    
+    with open(results_path, 'w') as file:
+        json.dump(json_results, file, indent=4)
 
-        # Save results intermittently
-        results_path = f'{_folders.RESULTS_PATH}/convergence_results.json'
-        with open(results_path, 'w') as file:
-            # A simple way to handle potential numpy types in data is to convert them to lists
-            # This is a basic conversion, more complex objects may need a custom encoder
-            def default_converter(o):
-                if isinstance(o, np.integer):
-                    return int(o)
-                if isinstance(o, np.floating):
-                    return float(o)
-                if isinstance(o, np.ndarray):
-                    return o.tolist()
-                raise TypeError(f"Object of type {o.__class__.__name__} is not JSON serializable")
+    print(f"\nExperiment finished. Results saved to {results_path}")
+    
+    return full_results
 
-            json.dump(full_results, file, indent=4, default=default_converter)
-
-    print(f"\nExperiment finished. Results saved to {results_path}") 
-
-def plot_convergence_snapshots(timesteps_to_plot):
-    """
-    Plots snapshots of the simulation at specified timesteps for each behavior.
-    Creates a grid of subplots where rows are behaviors and columns are timesteps.
-    """
-    # 1. LOAD DATA
+def plot_convergence_metrics():
+    """Plot metrics over time for all behaviors"""
+    # Load data
     results_path = f'{_folders.RESULTS_PATH}/convergence_results.json'
     try:
         with open(results_path, 'r') as file:
@@ -142,147 +192,55 @@ def plot_convergence_snapshots(timesteps_to_plot):
         return
 
     behaviors = list(full_results.keys())
-    num_behaviors = len(behaviors)
-    num_snapshots = len(timesteps_to_plot)
-
-    if num_behaviors == 0:
-        print("No behaviors found in results file.")
-        return
-
-    # Determine global min/max for signal values for consistent colormap scaling
-    all_signals = []
-    for behavior_name in behaviors:
-        behavior_data = full_results[behavior_name]
-        if behavior_data.get('results', {}).get('MEMBRANE_TILES'):
-            for timestep_data in behavior_data['results']['MEMBRANE_TILES']:
-                if 'signal' in timestep_data and timestep_data['signal']:
-                    all_signals.extend(timestep_data['signal'])
-
-    min_signal, max_signal = (min(all_signals), max(all_signals)) if all_signals else (0, 1)
-
-    # Create a normalizer and a colormap
-    norm = plt.Normalize(vmin=min_signal, vmax=max_signal)
-    cmap = plt.get_cmap('viridis')
-
-    # Assuming all setups are the same, use the first one for board parameters
-    first_behavior_name = behaviors[0]
-    setup = full_results[first_behavior_name]['setup']
-    tile_size = setup['TILE_SIZE']
-    board_size_pixels = setup['BOARD_SIZE'] * tile_size
-
-    # 2. CREATE PLOT
-    fig, axes = plt.subplots(num_behaviors, num_snapshots, 
-                             figsize=(num_snapshots * 3, num_behaviors * 3.5), 
-                             squeeze=False, constrained_layout=True)
-    fig.suptitle('Convergence Snapshots', fontsize=20, weight='bold')
-
-    for i, behavior_name in enumerate(behaviors):
-        behavior_data = full_results[behavior_name]
+    # Removed 'error_angles' and kept only the symmetry-aware one
+    metrics = ['error_positions', 'error_angles_symmetry', 'coverages']
+    metric_labels = ['Position Error [Tiles]', 'Angle Error [°]', 'Coverage [%]']
+    
+    # Create subplots (3 metrics instead of 4)
+    X = 3
+    fig, axes = plt.subplots(1, X, figsize=(4*X, X))
+    
+    # Use the proper color palette implementation
+    colors = _colors.create_palette(len(behaviors), normalize=True)
+    
+    # Define unique linestyles for each behavior
+    linestyles = ['-', '--', '-.', ':', (0, (3, 1, 1, 1))]  # solid, dashed, dashdot, dotted, custom
+    
+    for i, (metric, label) in enumerate(zip(metrics, metric_labels)):
+        ax = axes[i]
         
-        axes[i, 0].set_ylabel(behavior_name, fontsize=14, rotation=90, labelpad=20, weight='bold')
-
-        for j, timestep in enumerate(timesteps_to_plot):
-            ax = axes[i, j]
-
-            if i == 0:
-                ax.set_title(f't = {timestep}', fontsize=14, weight='bold')
-
-            ax.set_xlim(0, board_size_pixels)
-            ax.set_ylim(0, board_size_pixels)
-            ax.set_aspect('equal', adjustable='box')
-            ax.set_xticks([])
-            ax.set_yticks([])
+        for j, behavior_name in enumerate(behaviors):
+            behavior_data = full_results[behavior_name]
             
-            # Make axis lines thicker
-            for spine in ax.spines.values():
-                spine.set_linewidth(2)
-
-            # Draw grid
-            for x in range(0, board_size_pixels + 1, tile_size):
-                ax.axhline(y=x, color=COLORS.GRID, linestyle='-', linewidth=0.5)
-                ax.axvline(x=x, color=COLORS.GRID, linestyle='-', linewidth=0.5)
-
-            # Plot target shape
-            target_tiles = behavior_data['setup']['TARGET_TILES']
-            for x_coord, y_coord in zip(target_tiles['x'], target_tiles['y']):
-                rect = patches.Rectangle((x_coord * tile_size, y_coord * tile_size), tile_size, tile_size,
-                                         linewidth=1, edgecolor='none', facecolor=COLORS.TARGET, alpha=0.7)
-                ax.add_patch(rect)
-
-            # Reconstruct and plot target polygon
-            target_center = behavior_data['setup']['TARGET_CENTER']
-            target_angle = behavior_data['setup']['TARGET_ANGLE']
-            shape = behavior_data['setup']['SHAPE']
-            resolution = behavior_data['setup']['RESOLUTION']
-            
-            # Reconstruct the target tetromino
-            temp_target = Tetromino(shape, tile_size, resolution=resolution)
-            temp_target.set_angle(target_angle)
-            temp_target.rect.center = (target_center[0], target_center[1])
-
-            # Get and draw target polygon
-            target_polygon = temp_target.mask.outline()
-            if target_polygon:
-                abs_target_polygon = [[p[0] + temp_target.rect.x, p[1] + temp_target.rect.y] for p in target_polygon]
-                target_polygon_patch = patches.Polygon(abs_target_polygon, closed=True, edgecolor=f'#{_colors.PALETTE[0]}', facecolor='none', linewidth=2)
-                ax.add_patch(target_polygon_patch)
-
-            # Plot object shape at timestep
-            if timestep < len(behavior_data['results']['MEMBRANE_TILES']):
-                membrane_tiles = behavior_data['results']['MEMBRANE_TILES'][timestep]
+            if behavior_data and metric in behavior_data:
+                # Single run data - no averaging needed
+                metric_values = np.array(behavior_data[metric])
+                timesteps = np.arange(len(metric_values))
                 
-                if 'signal' in membrane_tiles and membrane_tiles['signal']:
-                    for k, (x_coord, y_coord) in enumerate(zip(membrane_tiles['x'], membrane_tiles['y'])):
-                        signal = membrane_tiles['signal'][k]
-                        color = cmap(norm(signal))
-                        rect = patches.Rectangle((x_coord * tile_size, y_coord * tile_size), tile_size, tile_size,
-                                                 linewidth=1, edgecolor='k', facecolor=color)
-                        ax.add_patch(rect)
-                else: # Fallback for old data
-                    for x_coord, y_coord in zip(membrane_tiles['x'], membrane_tiles['y']):
-                        rect = patches.Rectangle((x_coord * tile_size, y_coord * tile_size), tile_size, tile_size,
-                                                 linewidth=1, edgecolor='k', facecolor=COLORS.OBJECT)
-                        ax.add_patch(rect)
+                # Plot single curve for each behavior
+                linestyle = linestyles[j % len(linestyles)]
+                ax.plot(timesteps, metric_values, label=behavior_name, color=colors[j], 
+                       linewidth=2, linestyle=linestyle)
             else:
-                ax.text(0.5, 0.5, 'No data', horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
-
-            # Reconstruct and plot object polygon
-            ts_data = behavior_data['results']['time_series']
-            if timestep < len(ts_data['object_center_x']):
-                shape = behavior_data['setup']['SHAPE']
-                resolution = behavior_data['setup']['RESOLUTION']
-                center_x = ts_data['object_center_x'][timestep]
-                center_y = ts_data['object_center_y'][timestep]
-                angle = ts_data['object_angle'][timestep]
-
-                # Reconstruct the tetromino
-                temp_tetromino = Tetromino(shape, tile_size, resolution=resolution)
-                temp_tetromino.set_angle(angle)
-                temp_tetromino.rect.center = (center_x, center_y)
-
-                # Get and draw polygon
-                object_polygon = temp_tetromino.mask.outline()
-                if object_polygon:
-                    abs_polygon = [[p[0] + temp_tetromino.rect.x, p[1] + temp_tetromino.rect.y] for p in object_polygon]
-                    polygon_patch = patches.Polygon(abs_polygon, closed=True, edgecolor=_colors.YELLOW, facecolor='none', linewidth=2)
-                    ax.add_patch(polygon_patch)
-
-    # Add a colorbar for the signal values
-    if all_signals:
-        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
-        sm.set_array([])
-        fig.colorbar(sm, ax=axes.ravel().tolist(), label='Signal', shrink=0.8, orientation='vertical')
-
-    # Save the figure
-    save_path = f'{_folders.VISUALIZATIONS_PATH}/convergence_snapshots.png'
+                print(f"Warning: No data for {behavior_name} - {metric}")
+        
+        ax.set_xlabel('Timestep')
+        ax.set_ylabel(label)
+        ax.set_title(f'{label} Over Time')
+        ax.legend()
+    
+    plt.tight_layout()
+    
+    # Save the plot
+    save_path = f'{_folders.VISUALIZATIONS_PATH}/convergence_plot.png'
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    print(f"\nConvergence snapshot plot saved to {save_path}")
+    
+    print(f"Convergence plot saved to {save_path}")
 
 if __name__ == '__main__':
+    # Run simulation
     run_simulation()
     
-    # Set the correct experiment folder before plotting
-    
+    # Plot results
     _folders.set_experiment_folders('_Convergence_Analysis')
-    
-    plot_convergence_snapshots(timesteps_to_plot=[0, 50, 100])
+    plot_convergence_metrics()
