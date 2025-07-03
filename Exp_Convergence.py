@@ -194,7 +194,7 @@ def plot_convergence_metrics():
     behaviors = list(full_results.keys())
     # Removed 'error_angles' and kept only the symmetry-aware one
     metrics = ['error_positions', 'error_angles_symmetry', 'coverages']
-    metric_labels = ['Position Error [Tiles]', 'Angle Error [°]', 'Coverage [%]']
+    metric_labels = ['Position Error [Tiles]', 'Angle Error Symmetry-Free [°]', 'Coverage [%]']
     
     # Create subplots (3 metrics instead of 4)
     X = 3
@@ -226,7 +226,7 @@ def plot_convergence_metrics():
         
         ax.set_xlabel('Timestep')
         ax.set_ylabel(label)
-        ax.set_title(f'{label} Over Time')
+        #ax.set_title(f'{label}')
         ax.legend()
     
     plt.tight_layout()
