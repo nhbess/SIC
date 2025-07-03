@@ -242,11 +242,11 @@ def write_table(results):
                 
                 # Format the value
                 if mean == best_mean and mean != 0:
-                    values.append(f'\\textbf{{{mean:.2f} $\\pm$ {std:.2f}}}')
+                    values.append(f'\\textbf{{{mean:.1f} $\\pm$ {std:.1f}}}')
                 elif mean == second_best_mean and mean != 0:
-                    values.append(f'\\textit{{{mean:.2f} $\\pm$ {std:.2f}}}')
+                    values.append(f'\\textit{{{mean:.1f} $\\pm$ {std:.1f}}}')
                 else:
-                    values.append(f'{mean:.2f} $\\pm$ {std:.2f}')
+                    values.append(f'{mean:.1f} $\\pm$ {std:.1f}')
             else:
                 values.append('--')
         
