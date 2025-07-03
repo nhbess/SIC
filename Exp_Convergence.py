@@ -194,11 +194,11 @@ def plot_convergence_metrics():
     behaviors = list(full_results.keys())
     # Removed 'error_angles' and kept only the symmetry-aware one
     metrics = ['error_positions', 'error_angles_symmetry', 'coverages']
-    metric_labels = ['Position Error [Tiles]', 'Angle Error Symmetry-Free [°]', 'Coverage [%]']
+    metric_labels = ['Position Error [Tiles]', 'Angle Error\nSymmetry-Free [°]', 'Coverage [%]']
     
     # Create subplots (3 metrics instead of 4)
-    X = 3
-    fig, axes = plt.subplots(1, X, figsize=(4*X, X))
+    X = 2.5
+    fig, axes = plt.subplots(1, 3, figsize=(4*X, X*1.2))
     
     # Use the proper color palette implementation
     colors = _colors.create_palette(len(behaviors), normalize=True)
@@ -225,9 +225,9 @@ def plot_convergence_metrics():
                 print(f"Warning: No data for {behavior_name} - {metric}")
         
         ax.set_xlabel('Timestep')
-        ax.set_ylabel(label)
-        #ax.set_title(f'{label}')
-        ax.legend()
+        #ax.set_ylabel(label)
+        ax.set_title(f'{label}')
+        ax.legend(fontsize=8)
     
     plt.tight_layout()
     
@@ -239,7 +239,7 @@ def plot_convergence_metrics():
 
 if __name__ == '__main__':
     # Run simulation
-    run_simulation()
+    #run_simulation()
     
     # Plot results
     _folders.set_experiment_folders('_Convergence_Analysis')
